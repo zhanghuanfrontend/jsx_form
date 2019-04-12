@@ -1,0 +1,65 @@
+.form-area {
+    width: 400px;
+    border: solid 1px #ddd;
+    padding: 20px;
+    margin: 50px;
+    .param-item {
+        border: solid 1px #ddd;
+        padding: 20px;
+        position: relative;
+        border-top: 0;
+        &:first-child {
+            border-top: solid 1px #ddd;
+        }
+        .add-btn{
+            position: absolute;
+            left: 0;
+            right: 0;
+            text-align: center;
+            height: 22px;
+            line-height: 20px;
+            border-top: solid 1px #ddd;
+            background: #e9f3f6;
+            bottom: 0;
+            cursor: pointer;
+        }
+        .delete-btn {
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            text-align: center;
+            line-height: 30px;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+            color: #188fff;
+        }
+    }
+    .form-group {
+        display: flex;
+        align-items: center;
+        &.param-name {
+            .ant-select {
+                width: 200px;
+                flex: 1 1 auto;
+                &.type-select {
+                    width: 100px;
+                    margin-left: 15px;
+                    flex: 0 0 auto;
+                }
+            }
+            .ant-input {
+                width: 100px;
+                margin-left: 15px;
+                flex: 0 0 auto;
+            }
+        }
+        .label {
+            width: 60px;
+            flex: 0 0 auto;
+        }
+        &.desc-rows {
+            margin-top: 15px;
+        }
+    }
+}
