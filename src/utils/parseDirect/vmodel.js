@@ -6,7 +6,7 @@ export const getChangeFn = (setState, key) => {
         if(setState && setState instanceof Function){
             let value = event
             // 传入的事event对象
-            if(event.target && event.target instanceof HTMLElement){
+            if(event.target && (event.target instanceof HTMLElement || typeof event.target.value !== 'undefined')){
                 value = event.target.value
             }
             setState(key, value)

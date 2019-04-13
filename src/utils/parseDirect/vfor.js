@@ -46,6 +46,11 @@ const copyNewElement = (element, childWrap, list, vfor, dealCopyEle) => {
     const {itemName, listKey} = parsevForDirective(vfor)
     // 保存原始element
     const oeiginEle = deepCloneProps(element)
+    // 如果list为空
+    if(list.length === 0){
+        childWrap.splice(beginIdx, 1)
+        return
+    }
     // 复制多个元素
     list.forEach((item, idx) => {
         const curIdx = beginIdx + idx

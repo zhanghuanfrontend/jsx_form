@@ -6,7 +6,7 @@ export default class Main extends React.Component {
     constructor(){
         super()
         this.state = {
-            curMenu: 'base'
+            curMenu: 'dynamic'
         }
     }
     renderComponent = () => {

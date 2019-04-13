@@ -6,3 +6,5 @@ export const osList = [
     'Web',
     'Mac'
 ]
+
+export const typeList = ['string', 'integer', 'float']

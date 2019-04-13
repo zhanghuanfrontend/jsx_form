@@ -62,17 +62,33 @@ const displayErrorInfo = (element, error) => {
 
 // 校验表单
 const validFormItem = (rules, element, options) => {
+    const modelStr = element.props['v-model']
+    const curValue = element.props.value
+    const lastValue = options.cache[modelStr]
+    // 第一次进入不校验
+    if(typeof lastValue === 'undefined'){
+        options.cache[modelStr] = curValue
+        return
+    }
+    // 值未发生改变不进行校验
+    if(lastValue === curValue){
+        return
+    }
+    options.cache[modelStr] = curValue
     const keyName = 'valid-key'
     validator.rules = {[keyName]: rules}
-    const validValue = {[keyName]: element.props.value}
-    const modelStr = element.props['v-model']
-    console.log(rules)
+    const validValue = {[keyName]: curValue}
+    
     validator.validate(validValue, (errors, fields) => {
         if(errors && errors.length > 0){
             const error = { message: errors[0].message, key: modelStr}
             if(options.setError && options.setError instanceof Function){
-                options.setError(error)
+                options.setError(error, modelStr)
                 displayErrorInfo(element, error)
+            }
+        }else {
+            if(options.cancelError && options.cancelError instanceof Function){
+                options.cancelError(modelStr)
             }
         }
     })

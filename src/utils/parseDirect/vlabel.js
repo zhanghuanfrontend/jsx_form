@@ -3,9 +3,10 @@ import React from 'react'
 const getEleWrap = (label, element) => {
     // 给element新增classname
     const className = element.props.className
+    const labelClass = element.props['v-label-class'] || ''
     element.props.className = className ? `${className} v-form-item` : 'v-form-item'
     const wrap = React.createElement('div', {
-        className: 'v-form-wrap'
+        className: `v-form-wrap ${labelClass}`
     }, React.createElement('span', {
         className: 'v-form-label'
     }, `${label}:`), element)

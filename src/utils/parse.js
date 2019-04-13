@@ -6,10 +6,17 @@ import {
     vshowParse,
     vlabelParse,
     vvalidateParse,
+    vclickParse,
 } from './index'
 
-// 指令解析顺序
-const sortDirective = ['v-for', 'v-label', 'v-model', 'v-validate']
+// 对指令进行排序
+const sortKeys = (keys) => {
+    // 指令解析顺序
+    const sortDirective = ['v-for', 'v-label', 'v-model', 'v-validate', 'v-show']
+    const hasKeys = sortDirective.filter(key => keys.includes(key))
+    return [...new Set([...hasKeys, ...keys])]
+}
+
 
 const parseDirect = (key, element, options, loopDealFn) => {
     switch(key){
@@ -27,6 +34,9 @@ const parseDirect = (key, element, options, loopDealFn) => {
             break
         case 'v-validate':
             vvalidateParse(element, options)
+            break
+        case 'v-click':
+            vclickParse(element, options)
             break
     }
 }
@@ -47,9 +57,7 @@ const loopDeal = (children, options, parent) => {
         children.__parent__ = parent || null
         let keys = Object.keys(props)
         // 对指令排序，确保v-for指令先执行
-        if(keys.includes('v-for')){
-            keys = [...new Set([...sortDirective, ...keys])]
-        }
+        keys = sortKeys(keys)
         keys.forEach(key => {
             // 如果prop是指令
             if(key.indexOf('v-') === 0){

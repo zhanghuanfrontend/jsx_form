@@ -1,4 +1,4 @@
-
+import {execDirective} from '../index'
 // 处理v-show执行结果
 const execVshowRes = (element, execResult) => {
     // 如果v-show表达式为false，则删除元素
@@ -16,7 +16,6 @@ const execVshowRes = (element, execResult) => {
 
 // 执行v-show语句
 const execVshowStr = (element, options) => {
-    console.log(element)
     const showStr = element.props['v-show']
     const keys = Object.keys(options.formData)
     const hasKeyList = []
@@ -30,10 +29,17 @@ const execVshowStr = (element, options) => {
         }
     })
     const execFn = new Function(...hasKeyList, `return ${showStr}`)
-    return execFn(...keyVariable)
+    let results = false
+    try {
+        results = execFn(...keyVariable)
+    }catch(err) {
+        console.log(err)
+    }
+    return results
 }
 
 export default (element, options) => {
-    const execResult = execVshowStr(element, options)
+    const showStr = element.props['v-show']
+    const execResult = execDirective(showStr, options.formData)
     execVshowRes(element, execResult)
 }

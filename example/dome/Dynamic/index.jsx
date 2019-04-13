@@ -17,11 +17,11 @@ export default class Base extends React.Component {
                         type: 'string',
                         desc: ''
                     },
-                    {
-                        name: '',
-                        type: 'integer',
-                        desc: ''
-                    }
+                    // {
+                    //     name: '',
+                    //     type: 'integer',
+                    //     desc: ''
+                    // }
                 ]
             }
         }
@@ -30,15 +30,14 @@ export default class Base extends React.Component {
     render() {
         const {formData} = this.state
         return <div className="dynamic-form-area">
-            <JSXForm ref={this.JSXForm} value={formData} className="form-area" onChange={(data) => {
+            <JSXForm ref={this.JSXForm} value={formData} onChange={(data) => {
                 this.setState({formData: data}, () => {
                     console.log(this.state.formData)
                 })
             }}>
                 <div className="param-item" v-for="(item, index) in paramList">
-                    <div className="form-group param-name">
-                        <span className="label">param：</span>
-                        <Select v-model="item.name">
+                    <div className="param-rows">
+                        <Select v-model="item.name" v-label-class="param-select" v-label="param">
                             {
                                 paramList.map(item => <Option value={item.name}>{item.name}</Option>)
                             }
@@ -49,10 +48,7 @@ export default class Base extends React.Component {
                             }
                         </Select>
                     </div>
-                    <div className="form-group desc-rows">
-                        <span className="label">描述：</span>
-                        <TextArea v-model="item.desc" rows="3"></TextArea>
-                    </div>
+                    <TextArea v-model="item.desc" v-label="描述" rows="3"></TextArea>
                     <div className="add-btn" onClick={() => {
                         const {formData} = this.state
                         formData.paramList.push({
@@ -62,9 +58,7 @@ export default class Base extends React.Component {
                         })
                         this.setState({formData, })
                     }} v-show="index === paramList.length - 1">+</div>
-                    <div className="delete-btn" v-show="paramList.length > 1" onClick={() => {
-                        console.log('aaa')
-                    }}>
+                    <div className="delete-btn" v-show="paramList.length > 1" v-click="paramList.splice(index, 1)">
                         <Icon theme="filled" type="delete" />
                     </div>
                 </div>

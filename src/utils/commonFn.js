@@ -83,14 +83,28 @@ export const modifyKeyValue = (data, keyStr, value) => {
     return data
 }
 
-// 复制除了特定key的对象
-export const copyExceptKeys = (object, keys = []) => {
-    const keyList = Object.keys(object)
-    const newObj = {}
-    keyList.forEach(key => {
-        if(!keys.includes(key)){
-            newObj[key] = deepCloneProps(object[key])
+// 执行指令字符串
+export const execDirective = (directiveStr, formData) => {
+    if(!directiveStr || !formData){
+        return false
+    }
+    const keys = Object.keys(formData)
+    const hasKeyList = []
+    const keyVariable = []
+    keys.forEach(key => {
+        // 匹配出该变量的RegExp
+        const reg = new RegExp(`(^|(?<=\\s))${key}(\\b|$)`)
+        if(reg.test(directiveStr)){
+            hasKeyList.push(key)
+            keyVariable.push(formData[key])
         }
     })
-    return newObj
+    const execFn = new Function(...hasKeyList, `return ${directiveStr}`)
+    let results = false
+    try {
+        results = execFn(...keyVariable)
+    }catch(err) {
+        console.log(err)
+    }
+    return results
 }
