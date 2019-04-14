@@ -1,7 +1,7 @@
 // 替换原组件的change事件
 import {getKeyValue} from '../index'
 
-export const getChangeFn = (setState, key) => {
+const getChangeFn = (setState, key, element) => {
     return event => {
         if(setState && setState instanceof Function){
             let value = event
@@ -9,9 +9,21 @@ export const getChangeFn = (setState, key) => {
             if(event.target && (event.target instanceof HTMLElement || typeof event.target.value !== 'undefined')){
                 value = event.target.value
             }
-            setState(key, value)
+            setState(key, getOptionPacking(value, 'result', element))
         }
     }
+}
+
+// 获取配置里的额外处理函数
+const getOptionPacking = (value, type, element) => {
+    const vpacking = element.props['v-packing']
+    if(!vpacking || (!vpacking instanceof Object)){
+        return value
+    }
+    if(vpacking[type] && vpacking[type] instanceof Function){
+        return vpacking[type](value)
+    }
+    return value
 }
 
 export default (element, options) => {
@@ -23,7 +35,7 @@ export default (element, options) => {
         if(prev !== curr){
             element.props = {
                 ...element.props,
-                value: curr
+                value: getOptionPacking(curr, 'value', element)
             }
             let parent = element.__parent__
             while(parent){
@@ -33,7 +45,7 @@ export default (element, options) => {
         }
         const onChangeFn = element.props.onChange
         if(!onChangeFn || onChangeFn.type !== 'JSX_CHANGE_FN'){
-            element.props.onChange = getChangeFn(options.setState, model)
+            element.props.onChange = getChangeFn(options.setState, model, element)
         }
     }
 }
