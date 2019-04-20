@@ -5,6 +5,7 @@ import {osList, typeList} from './testData'
 import './index.less'
 const TextArea = Input.TextArea
 const RadioGroup = Radio.Group
+const Option = Select.Option
 
 export default class Base extends React.Component {
     constructor(){
@@ -21,7 +22,6 @@ export default class Base extends React.Component {
     }
     submitFormData = () => {
         const data = this.jsxForm.current.getValue()
-        console.log(data)
     }
     render() {
         return <div className="base-form-area">

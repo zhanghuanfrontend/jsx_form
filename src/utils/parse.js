@@ -7,24 +7,49 @@ import {
     vlabelParse,
     vvalidateParse,
     vclickParse,
+    customDirective,
 } from './index'
 
 // 对指令进行排序
 const sortKeys = (keys) => {
     // 指令解析顺序
-    const sortDirective = ['v-for', 'v-label', 'v-model', 'v-validate', 'v-show']
-    const hasKeys = sortDirective.filter(key => keys.includes(key))
-    return [...new Set([...hasKeys, ...keys])]
+    const sortDirective = [
+        'v-for', 
+        'v-label', 
+        'v-model', 
+        'v-validate', 
+        'v-show',
+        'v-click',
+        'v-packing',
+        'v-label-class'
+    ]
+    const hasKeys = []   // 已有指令
+    const customDirective = []     // 自定义指令
+    keys.forEach(key => {
+        if(key.indexOf('v-d-') === 0){
+            customDirective.push(key)
+        }else if(sortDirective.includes(key)){
+            hasKeys.push(key)
+        }
+    })
+    return [...new Set([
+        'v-for',   //  确保v-for指令最先被解析
+        ...customDirective,
+        ...hasKeys,
+        ...keys
+    ])]
 }
 
 
 const parseDirect = (key, element, options, loopDealFn) => {
+    options.parseDirect = parseDirect
+    options.loopDealFn = options.loopDealFn || loopDealFn
     switch(key){
         case 'v-model':
             vmodelParse(element, options)
             break
         case 'v-for':
-            vforParse(element, options, loopDealFn)
+            vforParse(element, options)
             break
         case 'v-show':
             vshowParse(element, options)
@@ -37,6 +62,9 @@ const parseDirect = (key, element, options, loopDealFn) => {
             break
         case 'v-click':
             vclickParse(element, options)
+            break
+        default:
+            customDirective(key, element, options)
             break
     }
 }

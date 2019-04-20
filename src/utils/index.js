@@ -12,6 +12,7 @@ import vshowParse from './parseDirect/vshow'
 import vlabelParse from './parseDirect/vlabel'
 import vvalidateParse from './parseDirect/vvalidate'
 import vclickParse from './parseDirect/vclick'
+import customDirective from './parseDirect/customDirective'
 export {
     parse, 
     vmodelParse, 
@@ -20,4 +21,5 @@ export {
     vlabelParse, 
     vvalidateParse,
     vclickParse,
+    customDirective
 }

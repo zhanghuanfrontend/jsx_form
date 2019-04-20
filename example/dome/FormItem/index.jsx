@@ -9,11 +9,13 @@ export default class FormItem extends React.Component {
         super()
         this.state = {
             formData: {
-                computed: {
-                    name: {
-                        padding: '10px',
-                        color: '#000'
-                    }
+                styles: {
+                    border: 'solid 1px #ddd',
+                    padding: '10px',
+                    color: '#000'
+                },
+                linkage: {
+                    show: true,
                 }
             }
         }
@@ -57,16 +59,19 @@ export default class FormItem extends React.Component {
         }
         return <div className="form-item-area">
             <div className="input-output-computed">
-                <JSXForm value={formData.computed} onChange={(data) => {
-                    this.setState({formData: {...formData, computed: data}})
+                <h3>表单组件复杂值处理</h3>
+                <JSXForm value={formData} onChange={(data) => {
+                    this.setState({formData: data})
                 }}>
                     <TextArea 
                         v-label="样式表" 
-                        v-model="name"  
+                        v-model="styles"  
                         v-packing={vpacking}
-                        rows="3"></TextArea>
+                        rows="5"></TextArea>
+                    <div className="results-area" style={formData.styles}>
+                        这里是样式结果
+                    </div>
                 </JSXForm>
-                
             </div>
         </div>
     }

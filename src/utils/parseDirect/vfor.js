@@ -89,13 +89,16 @@ const parsevForDirective = (vfor) => {
    return {itemName, listKey}
 }
 
-export default (element, options, loopDealFn) => {
+export default (element, options) => {
     const parent = element.__parent__
     const vfor = element.props['v-for']
+    if(!vfor){
+        return
+    }
     const { listKey } = parsevForDirective(vfor)
     const list = getKeyValue(options.formData, listKey)
     const dealCopyEle = (copyElement) => {
-        loopDealFn(copyElement, options, parent)
+        options.loopDealFn(copyElement, options, parent)
     }
     if(parent){
         let childWrap = parent.props.children

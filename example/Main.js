@@ -1,12 +1,12 @@
 import React from 'react'
-import {Dynamic, Base, FormItem} from './dome'
+import {Dynamic, Base, FormItem, Game, CustomDirective} from './dome'
 import { Menu } from 'antd'
 
 export default class Main extends React.Component {
     constructor(){
         super()
         this.state = {
-            curMenu: 'formItem'
+            curMenu: 'custom'
         }
     }
     renderComponent = () => {
@@ -18,7 +18,10 @@ export default class Main extends React.Component {
                 return <Dynamic />
             case 'formItem': 
                 return <FormItem />
-                return 
+            case 'linkage':
+                return <Game />
+            case 'custom':
+                return <CustomDirective />
         }
     }
     render() {
@@ -27,6 +30,8 @@ export default class Main extends React.Component {
             { name: '基本表单', key: 'base'},
             { name: '增减表单', key: 'dynamic'},
             { name: '表单组件', key: 'formItem'},
+            { name: '联动表单', key: 'linkage'},
+            { name: '自定义指令', key: 'custom'},
         ]
         
         return <div className="dome-area">
