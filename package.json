@@ -1,8 +1,8 @@
 {
   "name": "react_jsx_form",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/index.min.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.dev.js --color",
     "dll": "webpack --config ./config/webpack.dll.js",
