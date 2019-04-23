@@ -26,7 +26,7 @@ const loopReplace = (element, options, itemName, listKey, $index, parent) => {
         }
         keys.forEach(key => {
             if(key.indexOf('v-') === 0 && 
-                props[key] && typeof props[key] === 'string' ){
+                props[key] && typeof props[key] === 'string'){
                 let varName = itemName
                 // 如果是多个变量名
                 if(Array.isArray(itemName)){

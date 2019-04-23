@@ -100,8 +100,14 @@ export default class JSXForm extends React.Component {
             cache: this.cache,
             directive: JSXForm.customDirective
         }
+        let children = null
+        try {
+            children = parse(this, options)
+        }catch(error){
+            console.error(error)
+        }
         return <div className={`${className} jsx-form-area`}>
-            {parse(this, options)}
+            {children}
         </div>
     }
 }
