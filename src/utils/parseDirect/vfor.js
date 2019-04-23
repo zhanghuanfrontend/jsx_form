@@ -6,19 +6,27 @@ const forReg = /^(.+)\bin\b(.+)$/
 const forItemReg = /\((.+),(.+)\)/
 
 // 递归替换指令中的变量
-const loopReplace = (element, itemName, listKey, $index, ) => {
+const loopReplace = (element, options, itemName, listKey, $index, parent) => {
     if(!element || !(element instanceof Object)){
         return
     }
     if(Array.isArray(element)){
-        element.forEach(subEle => loopReplace(subEle, itemName, listKey, $index))
+        element.forEach(subEle => loopReplace(subEle, options, itemName, listKey, $index, parent))
     }else if(element.$$typeof && element.$$typeof.toString() === 'Symbol(react.element)'){
+        element.__parent__ = parent || null
         const props = element.props
-        const keys = Object.keys(props)
+        let keys = Object.keys(props)
+        // 提取出自定义指令，并先进行解析
+        const customDir = keys.filter(key => key.indexOf('v-d-') === 0)
+        if(customDir.length > 0){
+            customDir.forEach(key => {
+                options.customDirective(key, element, options)
+            })
+            keys = Object.keys(props)
+        }
         keys.forEach(key => {
             if(key.indexOf('v-') === 0 && 
-                props[key])
-            {
+                props[key] && typeof props[key] === 'string' ){
                 let varName = itemName
                 // 如果是多个变量名
                 if(Array.isArray(itemName)){
@@ -32,13 +40,13 @@ const loopReplace = (element, itemName, listKey, $index, ) => {
         })
         const children = element.props.children
         if(children && children instanceof Object){
-            loopReplace(children, itemName, listKey, $index)
+            loopReplace(children, options, itemName, listKey, $index, element)
         }
     }
 }
 
 // 复制elements
-const copyNewElement = (element, childWrap, list, vfor, dealCopyEle) => {
+const copyNewElement = (element, options, childWrap, list, vfor, dealCopyEle) => {
     if(!Array.isArray(list)){
         return []
     }
@@ -59,7 +67,7 @@ const copyNewElement = (element, childWrap, list, vfor, dealCopyEle) => {
             const newElement = idx === 0 ? element : deepCloneProps(oeiginEle)
             newElement.__list_by_key__ = `${listKey}`
             // 递归替换props下item变量
-            loopReplace(newElement, itemName, listKey, idx, true)
+            loopReplace(newElement, options, itemName, listKey, idx, newElement.__parent__)
             if(idx === 0){
                 // 对于原始element还原v-for指令
                 newElement.props['v-for'] = vfor
@@ -107,6 +115,6 @@ export default (element, options) => {
             childWrap = parent.props.children
         }
         // 复制Item
-        copyNewElement(element, childWrap, list, vfor, dealCopyEle)
+        copyNewElement(element, options, childWrap, list, vfor, dealCopyEle)
     }
 }

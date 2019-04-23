@@ -33,7 +33,7 @@ const sortKeys = (keys) => {
         }
     })
     return [...new Set([
-        'v-for',   //  确保v-for指令最先被解析
+        'v-for',
         ...customDirective,
         ...hasKeys,
         ...keys
@@ -41,9 +41,7 @@ const sortKeys = (keys) => {
 }
 
 
-const parseDirect = (key, element, options, loopDealFn) => {
-    options.parseDirect = parseDirect
-    options.loopDealFn = options.loopDealFn || loopDealFn
+const parseDirect = (key, element, options) => {
     switch(key){
         case 'v-model':
             vmodelParse(element, options)
@@ -89,7 +87,7 @@ const loopDeal = (children, options, parent) => {
         keys.forEach(key => {
             // 如果prop是指令
             if(key.indexOf('v-') === 0){
-                parseDirect(key, children, options, loopDeal)
+                parseDirect(key, children, options)
             }
         })
         //  如果存在子元素
@@ -102,6 +100,10 @@ const loopDeal = (children, options, parent) => {
 
 export default (parent, options) => {
     const children = parent.props.children
+    // 添加处理函数
+    options.parseDirect = parseDirect
+    options.loopDealFn = loopDeal
+    options.customDirective = customDirective
     loopDeal(children, options, parent)
     return parent.props.children
 }
