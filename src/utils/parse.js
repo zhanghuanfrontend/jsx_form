@@ -79,26 +79,26 @@ const loopDeal = (children, options, parent) => {
             loopDeal(children[i], options, parent)
         }
     }else if(children.$$typeof && children.$$typeof.toString() === 'Symbol(react.element)'){
-        // 如果已解析，则不做处理
-        if(!children.__has_parse__){
-            const props = children.props
-            children.__parent__ = parent || null
-            let keys = Object.keys(props)
-            // 对指令排序，确保v-for指令先执行
-            keys = sortKeys(keys)
-            keys.forEach(key => {
-                // 如果prop是指令
-                if(key.indexOf('v-') === 0){
+        const props = children.props
+        const hasParseList = children.__has_parse_dir__ || []
+        children.__parent__ = parent || null
+        let keys = Object.keys(props)
+        // 对指令排序，确保v-for指令先执行
+        keys = sortKeys(keys)
+        keys.forEach(key => {
+            // 如果prop是指令
+            if(key.indexOf('v-') === 0){
+                // 检查指令是否已解析
+                if(!hasParseList.includes(key)){
                     parseDirect(key, children, options)
                 }
-            })
-        }
+            }
+        })
         //  如果存在子元素
         const childElement = children.props.children
         if(childElement && childElement instanceof Object){
             loopDeal(childElement, options, children)
         }
-        children.__has_parse__ = true
     }
 }
 

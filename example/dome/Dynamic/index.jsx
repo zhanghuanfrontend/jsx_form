@@ -37,7 +37,7 @@ export default class Base extends React.Component {
             }}>
                 <div className="param-item" v-for="(item, index) in paramList">
                     <div className="param-rows">
-                        <Select v-d-options={[paramList.map(item => item.name), Option]} v-model="item.name" v-label-class="param-select" v-label="param">
+                        <Select v-d-options={[paramList.map(item => item.name), Option]} v-d-total={['item.name', 'param']} v-label-class="param-select">
                         </Select>
                         <Select className="type-select" v-model="item.type">
                             {

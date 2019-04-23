@@ -8,7 +8,11 @@ const dealCopyElement = (element, copyElement, options) => {
             element.props[dir] = copyElement.props[dir]
             if(dir.indexOf('v-') === 0){
                 options.parseDirect(dir, element, options)
-                element.__has_parse__ = true
+                // 添加已解析指令列表
+                if(!element.__has_parse_dir__){
+                    element.__has_parse_dir__ = []
+                }
+                element.__has_parse_dir__.push(dir)
             }
         }else if(dir === 'children' && copyElement.props.children){
             const children = element.props.children
@@ -24,13 +28,11 @@ const dealCopyElement = (element, copyElement, options) => {
             }
         }
     })
-    // 自定义指令已处理，添加已处理指标
-    element.__has_parse_custom_directive__ = true
 }
 
 export default (key, element, options) => {
     // 如果不是自定义指令，则忽略
-    if(key.indexOf('v-d-') !== 0 || element.__has_parse_custom_directive__){
+    if(key.indexOf('v-d-') !== 0){
         return
     }
     const dirList = options.directive || []

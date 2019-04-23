@@ -96,8 +96,6 @@ const validFormItem = (rules, element, options) => {
 
 
 export default (element, options) => {
-    console.log('----')
-    console.log(element)
     const validateList = element.props['v-validate']
     const rules = getRulesObj(validateList, element)
     validFormItem(rules, element, options)
