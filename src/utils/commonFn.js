@@ -99,7 +99,10 @@ export const execDirective = (directiveStr, formData) => {
             keyVariable.push(formData[key])
         }
     })
-    const execFn = new Function(...hasKeyList, `return ${directiveStr}`)
+    // 替换掉数字键值
+    const numberKey = /\.(\d+)/g
+    const execDir = directiveStr.replace(numberKey, '[$1]')
+    const execFn = new Function(...hasKeyList, `return ${execDir}`)
     let results = false
     try {
         results = execFn(...keyVariable)

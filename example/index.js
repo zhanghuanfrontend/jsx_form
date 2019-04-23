@@ -31,6 +31,10 @@ JSXForm.directive('v-d-total', (Element, value) => {
     return <Element {...props} />
 })
 
+JSXForm.directive('v-d-disabled', (Element, value, dirValue) => {
+    return <Element disabled={dirValue} />
+})
+
 
 ReactDOM.render(
     <Main />,

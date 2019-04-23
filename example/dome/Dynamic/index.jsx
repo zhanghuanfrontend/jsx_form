@@ -45,7 +45,13 @@ export default class Base extends React.Component {
                             }
                         </Select>
                     </div>
-                    <TextArea v-d-total={['item.desc', '描述', 'required']} rows="3"></TextArea>
+                    <TextArea v-packing={{
+                            value: (curValue) => {
+                            return curValue
+                            }
+                        }} 
+                        v-d-disabled="item.desc === '123'"
+                        v-d-total={['item.desc', '描述', 'required']} rows="3"></TextArea>
                     <div className="add-btn" v-click="paramList.push({name: '', type: 'integer', desc: ''})" v-show="index === paramList.length - 1">+</div>
                     <div className="delete-btn" v-show="paramList.length > 1" v-click="paramList.splice(index, 1)">
                         <Icon theme="filled" type="delete" />

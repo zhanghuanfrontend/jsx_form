@@ -72,6 +72,8 @@ const copyNewElement = (element, options, childWrap, list, vfor, dealCopyEle) =>
         if(existElement.__list_by_key__ !== `${listKey}`){
             const newElement = idx === 0 ? element : deepCloneProps(originEle)
             newElement.__list_by_key__ = `${listKey}`
+            newElement.__list_by_index__ = idx
+            newElement.__list_by_var__ = itemName
             // 递归替换props下item变量
             loopReplace(newElement, options, itemName, listKey, idx, newElement.__parent__)
             if(idx === 0){

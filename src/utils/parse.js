@@ -104,6 +104,7 @@ const loopDeal = (children, options, parent) => {
 
 export default (parent, options) => {
     const children = parent.props.children
+    parent.__is_root_node__ = true
     // 添加处理函数
     options.parseDirect = parseDirect
     options.loopDealFn = loopDeal
