@@ -13,35 +13,38 @@ const loopReplace = (element, options, itemName, listKey, $index, parent) => {
     if(Array.isArray(element)){
         element.forEach(subEle => loopReplace(subEle, options, itemName, listKey, $index, parent))
     }else if(element.$$typeof && element.$$typeof.toString() === 'Symbol(react.element)'){
-        element.__parent__ = parent || null
-        const props = element.props
-        let keys = Object.keys(props)
-        // 提取出自定义指令，并先进行解析
-        const customDir = keys.filter(key => key.indexOf('v-d-') === 0)
-        if(customDir.length > 0){
-            customDir.forEach(key => {
-                options.customDirective(key, element, options)
-            })
-            keys = Object.keys(props)
-        }
-        keys.forEach(key => {
-            if(key.indexOf('v-') === 0 && 
-                props[key] && typeof props[key] === 'string'){
-                let varName = itemName
-                // 如果是多个变量名
-                if(Array.isArray(itemName)){
-                    varName = itemName[0]
-                    element.props[key] = props[key]
-                        .replace(itemName[1], $index)
-                }
-                element.props[key] = props[key]
-                    .replace(varName, `${listKey}.${$index}`)
+        if(!element.__has_parse_for__){
+            element.__parent__ = parent || null
+            const props = element.props
+            let keys = Object.keys(props)
+            // 提取出自定义指令，并先进行解析
+            const customDir = keys.filter(key => key.indexOf('v-d-') === 0)
+            if(customDir.length > 0){
+                customDir.forEach(key => {
+                    options.customDirective(key, element, options)
+                })
+                keys = Object.keys(props)
             }
-        })
+            keys.forEach(key => {
+                if(key.indexOf('v-') === 0 && 
+                    props[key] && typeof props[key] === 'string'){
+                    let varName = itemName
+                    // 如果是多个变量名
+                    if(Array.isArray(itemName)){
+                        varName = itemName[0]
+                        element.props[key] = props[key]
+                            .replace(itemName[1], $index)
+                    }
+                    element.props[key] = props[key]
+                        .replace(varName, `${listKey}.${$index}`)
+                }
+            })
+        }
         const children = element.props.children
         if(children && children instanceof Object){
             loopReplace(children, options, itemName, listKey, $index, element)
         }
+        element.__has_parse_for__ = true
     }
 }
 

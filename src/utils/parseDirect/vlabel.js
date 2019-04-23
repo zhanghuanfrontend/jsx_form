@@ -13,7 +13,6 @@ const getEleWrap = (label, element) => {
     wrap.__parent__ = element.__parent__
     wrap.__form_wrap__ = true
     element.__parent__ = wrap
-    element.__has_add_wrap__ = true
     return wrap
 }
 
@@ -34,9 +33,5 @@ const addElementWrap = (element) => {
 
 
 export default (element) => {
-    // 如果已添加label则不再进行处理
-    if(element.__has_add_wrap__){
-        return
-    }
     addElementWrap(element)
 }

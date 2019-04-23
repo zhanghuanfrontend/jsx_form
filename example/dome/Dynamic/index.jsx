@@ -37,10 +37,7 @@ export default class Base extends React.Component {
             }}>
                 <div className="param-item" v-for="(item, index) in paramList">
                     <div className="param-rows">
-                        <Select v-model="item.name" v-label-class="param-select" v-label="param">
-                            {
-                                paramList.map(item => <Option value={item.name}>{item.name}</Option>)
-                            }
+                        <Select v-d-options={[paramList.map(item => item.name), Option]} v-model="item.name" v-label-class="param-select" v-label="param">
                         </Select>
                         <Select className="type-select" v-model="item.type">
                             {
@@ -48,7 +45,7 @@ export default class Base extends React.Component {
                             }
                         </Select>
                     </div>
-                    <TextArea v-d-total={['item.desc', '描述']} rows="3"></TextArea>
+                    <TextArea v-d-total={['item.desc', '描述', 'required']} rows="3"></TextArea>
                     <div className="add-btn" v-click="paramList.push({name: '', type: 'integer', desc: ''})" v-show="index === paramList.length - 1">+</div>
                     <div className="delete-btn" v-show="paramList.length > 1" v-click="paramList.splice(index, 1)">
                         <Icon theme="filled" type="delete" />
