@@ -1,18 +1,13 @@
 import React from 'react'
 // 处理自定义指令的ReactElement
-const dealCopyElement = (element, copyElement, options) => {
+const dealCopyElement = (element, copyElement, options, isParseDir) => {
     // 处理自定义指令返回props
     const propKeys = Object.keys(copyElement.props)
     propKeys.forEach(dir => {
         if(typeof element.props[dir] === 'undefined' && dir !== 'children'){
             element.props[dir] = copyElement.props[dir]
-            if(dir.indexOf('v-') === 0){
+            if(dir.indexOf('v-') === 0 && isParseDir){
                 options.parseDirect(dir, element, options)
-                // 添加已解析指令列表
-                if(!element.__has_parse_dir__){
-                    element.__has_parse_dir__ = []
-                }
-                element.__has_parse_dir__.push(dir)
             }
         }else if(dir === 'children' && copyElement.props.children){
             const children = element.props.children
@@ -30,7 +25,7 @@ const dealCopyElement = (element, copyElement, options) => {
     })
 }
 
-export default (key, element, options) => {
+export default (key, element, options, isParseDir = true) => {
     // 如果不是自定义指令，则忽略
     if(key.indexOf('v-d-') !== 0){
         return
@@ -44,5 +39,5 @@ export default (key, element, options) => {
     const copyElement = React.Fragment
     const newElement = curDir.bindFn(copyElement, dirValue)
     // 处理自定义指令的值
-    dealCopyElement(element, newElement, options)
+    dealCopyElement(element, newElement, options, isParseDir)
 }

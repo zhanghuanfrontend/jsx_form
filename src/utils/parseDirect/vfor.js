@@ -20,7 +20,8 @@ const loopReplace = (element, options, itemName, listKey, $index, parent) => {
         const customDir = keys.filter(key => key.indexOf('v-d-') === 0)
         if(customDir.length > 0){
             customDir.forEach(key => {
-                options.customDirective(key, element, options)
+                // 最后一个参数表明，不需要在v-for解析过程中执行新增指令的解析
+                options.customDirective(key, element, options, false)
                 // 添加已解析指令列表
                 if(!element.__has_parse_dir__){
                     element.__has_parse_dir__ = []
@@ -58,7 +59,7 @@ const copyNewElement = (element, options, childWrap, list, vfor, dealCopyEle) =>
     const beginIdx = childWrap.indexOf(element)
     const {itemName, listKey} = parsevForDirective(vfor)
     // 保存原始element
-    const oeiginEle = deepCloneProps(element)
+    const originEle = deepCloneProps(element)
     // 如果list为空
     if(list.length === 0){
         childWrap.splice(beginIdx, 1)
@@ -69,7 +70,7 @@ const copyNewElement = (element, options, childWrap, list, vfor, dealCopyEle) =>
         const curIdx = beginIdx + idx
         const existElement = childWrap[curIdx] || {}
         if(existElement.__list_by_key__ !== `${listKey}`){
-            const newElement = idx === 0 ? element : deepCloneProps(oeiginEle)
+            const newElement = idx === 0 ? element : deepCloneProps(originEle)
             newElement.__list_by_key__ = `${listKey}`
             // 递归替换props下item变量
             loopReplace(newElement, options, itemName, listKey, idx, newElement.__parent__)
