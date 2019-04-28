@@ -22,6 +22,7 @@ export default class Base extends React.Component {
     }
     submitFormData = () => {
         const data = this.jsxForm.current.getValue()
+        console.log(data)
     }
     render() {
         return <div className="base-form-area">
@@ -31,7 +32,7 @@ export default class Base extends React.Component {
                 onChange={data => this.setState({formData: data})}
             >
                 <Input v-model="param" v-label="param" v-validate={['required', /^[a-zA-Z_]+$/g]} />
-                <Select v-model="os" v-label="操作系统" v-validate={['required']}>
+                <Select v-model="os" allowClear v-label="操作系统" v-validate={['required']}>
                     {
                         osList.map(item => <Option key={item} value={item}>{item}</Option>)
                     }

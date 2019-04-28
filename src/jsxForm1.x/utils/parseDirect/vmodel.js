@@ -5,9 +5,9 @@ const getChangeFn = (options, key, element) => {
     return event => {
         const { setState } = options
         if(setState && setState instanceof Function){
-            let value = event
+            let value = event || ''
             // 传入的事event对象
-            if(event.target && (event.target instanceof HTMLElement || typeof event.target.value !== 'undefined')){
+            if(event && event.target && (event.target instanceof HTMLElement || typeof event.target.value !== 'undefined')){
                 value = event.target.value
             }
             setState(key, getOptionPacking(value, 'result', element, options))
@@ -56,7 +56,7 @@ export default (element, options) => {
         }
         const onChangeFn = element.props.onChange
         if(!onChangeFn || onChangeFn.type !== 'JSX_CHANGE_FN'){
-            element.props.onChange = getChangeFn(options, model, element)
+            element.props.onChange = getChangeFn(options, model, element, onChangeFn)
         }
     }
 }

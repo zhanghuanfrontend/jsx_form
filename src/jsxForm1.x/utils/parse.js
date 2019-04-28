@@ -8,6 +8,7 @@ import {
     vvalidateParse,
     vclickParse,
     customDirective,
+    dynamicAttr,
 } from './index'
 
 // 对指令进行排序
@@ -62,7 +63,13 @@ const parseDirect = (key, element, options) => {
             vclickParse(element, options)
             break
         default:
-            customDirective(key, element, options)
+            if(key.indexOf('v-d-') === 0){
+                // 如果为自定义指令
+                customDirective(key, element, options)
+            }else if(key.indexOf('v-$') === 0){
+                // 如果为动态属性
+                dynamicAttr(key, element, options)
+            }
             break
     }
 }

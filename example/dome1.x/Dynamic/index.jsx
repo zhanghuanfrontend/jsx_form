@@ -31,13 +31,14 @@ export default class Base extends React.Component {
         const {formData} = this.state
         return <div className="dynamic-form-area">
             <JSXForm ref={this.JSXForm} value={formData} onChange={(data) => {
-                this.setState({formData: data}, () => {
-                    console.log(this.state.formData)
-                })
+                this.setState({formData: data})
             }}>
                 <div className="param-item" v-for="(item, index) in paramList">
                     <div className="param-rows">
-                        <Select v-d-options={[paramList.map(item => item.name), Option]} v-d-total={['item.name', 'param']} v-label-class="param-select">
+                        <Select 
+                            v-d-options={[paramList.map(item => item.name), Option]} 
+                            v-$disabled="item.name"
+                            v-d-total={['item.name', 'param']} v-label-class="param-select">
                         </Select>
                         <Select className="type-select" v-model="item.type">
                             {
@@ -46,8 +47,8 @@ export default class Base extends React.Component {
                         </Select>
                     </div>
                     <TextArea v-packing={{
-                            value: (curValue) => {
-                            return curValue
+                            value: (curValue, curInfo) => {
+                                return curValue
                             }
                         }} 
                         v-d-disabled="item.desc === '123'"

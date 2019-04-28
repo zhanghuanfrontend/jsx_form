@@ -1,12 +1,13 @@
 import React from 'react'
-import {Dynamic, Base, FormItem, Game, CustomDirective} from './dome'
+import {Dynamic, Base, FormItem, Game, CustomDirective} from './index'
 import { Menu } from 'antd'
+import './utils/init'
 
 export default class Main extends React.Component {
     constructor(){
         super()
         this.state = {
-            curMenu: 'dynamic'
+            curMenu: 'base'
         }
     }
     renderComponent = () => {

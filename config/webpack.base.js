@@ -2,6 +2,7 @@ const paths = require('./paths')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const devMode = process.env.NODE_ENV !== 'production'
+const path = require('path')
 
 const webpackPlugins = []
 let externals = {}
@@ -60,6 +61,9 @@ module.exports = {
                                 ["@babel/plugin-proposal-class-properties", { "loose": true }]
                             ]
                         }
+                    },
+                    {
+                        loader: path.resolve(__dirname, '../loader/index.js'),
                     }
                 ]
             },

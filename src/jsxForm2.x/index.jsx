@@ -1,0 +1,80 @@
+import React from 'react'
+import { JSXFormData, modifyKeyValue, getKeyValue } from './utils'
+import Schema from 'async-validator'
+const validator = new Schema({})
+import FormItem from './FormItem'
+import './index.less'
+
+export default class JSXForm extends React.Component {
+    constructor(props){
+        super()
+        this.state = {}
+        // 存储context数据
+        this.JSXFormData = {
+            formData: props.value || {},
+            setFormData: this.updateFormData,
+            eleList: {},
+            validResults: {},
+            validator,
+        }
+        if(props.labelWidth){
+            this.JSXFormData.labelWidth = props.labelWidth
+        }
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.value && nextProps.value !== this.props){
+            this.spreadDataChange(nextProps.value)
+        }
+    }
+    // 广播数据的修改
+    spreadDataChange = (value = {}) => {
+        const {eleList = {}} = this.JSXFormData
+        this.JSXFormData.formData = value
+        // 对所有已注册的key广播修改
+        const keys = Object.keys(eleList)
+        keys.forEach(key => {
+            const newValue = getKeyValue(value, key)
+            const modifyFns = eleList[key] || []
+            modifyFns.forEach(Fn => {
+                if(Fn && Fn instanceof Function){
+                    Fn(newValue)
+                }
+            })
+        })
+    }
+    // 修改表单的值
+    updateFormData = (key, value) => {
+        const { formData = {}, eleList = {}, validResults = {} } = this.JSXFormData
+        const { onChange } = this.props
+        const newFormData = modifyKeyValue(formData, key, value)
+        const modifyFns = eleList[key] || []
+        modifyFns.forEach(Fn => {
+            if(Fn && Fn instanceof Function){
+                Fn(value)
+            }
+        })
+        setTimeout(() => {
+            if(onChange && onChange instanceof Function){
+                onChange(JSON.stringify(validResults) === '{}', newFormData)
+            }
+        })
+    }
+    // 获取指定key的值
+    getValue = (key) => {
+        const { formData = {} } = this.JSXFormData
+        if(!key){
+            return formData
+        }
+        return getKeyValue(formData, key)
+    }
+    setValue = (key, value) => {
+        this.updateFormData(key, value)
+    }
+    render() {
+        return <div className="jsx-form-area">
+            <JSXFormData.Provider value={this.JSXFormData}>
+                {this.props.children}
+            </JSXFormData.Provider>
+        </div>
+    }
+}

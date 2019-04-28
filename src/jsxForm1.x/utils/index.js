@@ -13,6 +13,7 @@ import vlabelParse from './parseDirect/vlabel'
 import vvalidateParse from './parseDirect/vvalidate'
 import vclickParse from './parseDirect/vclick'
 import customDirective from './parseDirect/customDirective'
+import dynamicAttr from './parseDirect/dynamicAttr'
 export {
     parse, 
     vmodelParse, 
@@ -21,5 +22,6 @@ export {
     vlabelParse, 
     vvalidateParse,
     vclickParse,
-    customDirective
+    customDirective,
+    dynamicAttr
 }
