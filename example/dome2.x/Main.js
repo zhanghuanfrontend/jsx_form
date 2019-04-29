@@ -1,7 +1,7 @@
 import React from 'react'
 // import TestBase from './TestBase'
-import Base from './Base'
-// import Dynamic from './Dynamic'
+// import Base from './Base'
+import Dynamic from './Dynamic'
 
 export default class Main extends React.Component {
     render() {
@@ -12,8 +12,8 @@ export default class Main extends React.Component {
         }
         return <>
             {/* <TestBase /> */}
-            <Base />
-            {/* <Dynamic /> */}
+            {/* <Base /> */}
+            <Dynamic />
         </>
     }
 }

@@ -5,7 +5,7 @@ module.exports = (curProp, newProp, option) => {
     let dataKey = props['v-model'] || ''
     if(option.loopInfo && option.loopInfo.item){
         const loopInfo = option.loopInfo || {}
-        dataKey = dataKey.replace(loopInfo.item, `${loopInfo.loopVar}.\${${loopInfo.index}}`)
+        dataKey = dataKey.replace(loopInfo.item, `\${mapKey}.\${${loopInfo.index}}`)
         dataKey = `\`${dataKey.slice(1, -1)}\``
     }
     newProp.parent = {

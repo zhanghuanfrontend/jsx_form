@@ -42,11 +42,9 @@ module.exports = (template) => {
     }
     return template.replace(regJSXCon, (match, propStr) => {
         // 获取value属性的值
-        
         const valueAttr = getAttrValue('value', propStr).slice(1, -1)
         option.valueAttr = valueAttr
         const reactCode = babel.transform(match, options).code.slice(0, -1)
-        // const reactCode = window.Babel.transform(match, options).code.slice(0, -1)
         const parsedCode = parseReactElement(reactCode, option)
         console.log(`{${parsedCode}}`)
         return `{${parsedCode}}`

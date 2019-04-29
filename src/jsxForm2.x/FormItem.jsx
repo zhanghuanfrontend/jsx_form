@@ -6,6 +6,7 @@ import {
     cloneData, 
     isValueEqual 
 } from './utils'
+import { instanceOf } from 'prop-types';
 
 export default class FormItem extends React.Component {
     constructor(props){
@@ -73,7 +74,7 @@ export default class FormItem extends React.Component {
     }
     // 注入value
     parseFormItem = () => {
-        const { children } = this.props
+        const { children, dataKey } = this.props
         const { value } = this.state
         if(!this.JSXFormData || !children){
             return
@@ -83,6 +84,9 @@ export default class FormItem extends React.Component {
             children.value = value
             this.isReRender = false
             return children
+        }
+        if(children instanceof Function){
+            return children(value, dataKey)
         }
         const prev = children.props.value
         if(prev !== value){
@@ -126,7 +130,7 @@ export default class FormItem extends React.Component {
         })
     }
     render() {
-        const {label = '', className = '', labelWidth} = this.props
+        const {label = '', className = '', labelWidth, dataKey} = this.props
         const {errMsg} = this.state
         let totalLabelWidth = (this.JSXFormData || {}).labelWidth
         return <div className={`jsx-form-form-item ${className ? className : ''}`}>

@@ -1,4 +1,4 @@
-const { vmodelParse, vforParse } = require('./directive/index.js')
+const { vmodelParse, vforParse, vshowParse } = require('./directive/index.js')
 const commonFn = require('./commonFn')
 
 const { getParamList, removeMarks } = commonFn
@@ -9,6 +9,8 @@ const parseDirective = (dir, curProp, newProp, option) => {
             return vmodelParse(curProp, newProp, option)
         case 'v-for':
             return vforParse(curProp, newProp, option)
+        case 'v-show':
+            return vshowParse(curProp, newProp, option)
     }
 }
 
@@ -54,12 +56,30 @@ const getPropStr = (props) => {
     return `{${propStr}}`
 }
 
+// 包装子元素
+const wrapChildren = (type = 'origin', children, option) => {
+    switch(type) {
+        case 'origin':
+            return children
+        case 'global':
+            const JSXForm = option.JSXFormName
+            return `<${JSXForm}.JSXFormGlobalData.Consumer>
+            {_self => <>
+                {${children}}
+            </>}
+            </${JSXForm}.JSXFormGlobalData.Consumer>`
+    }
+}
+
 // 拼接出React Element
 const getReactElement = (newProp, option) => {
+    const JSXForm = option.JSXFormName
     let reactComp = `React.createElement(
         ${newProp.eleName},
         ${getPropStr(newProp.props)},
-        ${option.parseReact(newProp.children, option)}
+        ${wrapChildren(newProp.eleName === JSXForm ?
+            'global' : 'origin',
+            option.parseReact(newProp.children, option), option)}
     )`
     // 如果存在父级元素
     if(newProp.parent && newProp.parent.eleName){
@@ -72,9 +92,20 @@ const getReactElement = (newProp, option) => {
     // 如果存在循环展现的元素
     if(newProp.loopEle && newProp.loopEle.loopVar){
         const loopObj = newProp.loopEle || {}
-        reactComp =  `${loopObj.loopVar}.map((${loopObj.item}${loopObj.index ? `,${loopObj.index}` : ''}) => {
-            return ${reactComp}
-        })`
+        reactComp =  `<${JSXForm}.FormItem dataKey="${loopObj.loopVar}">
+        {
+            (mapData, mapKey) => 
+            (mapData || []).map((${loopObj.item}${loopObj.index ? `,${loopObj.index}` : ''}) => {
+                return ${reactComp}
+            })
+        }
+        </${JSXForm}.FormItem>`
+    }
+    // 如果有c-show指令
+    if(newProp.vShow){
+        reactComp = `
+            (${newProp.vShow}) && ${reactComp}
+        `
     }
     return reactComp
 }

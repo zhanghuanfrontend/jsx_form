@@ -28,8 +28,9 @@ export const isValueEqual = (preValue, curValue) => {
 
 // 查找key的上级对象
 export const findParentWrap = (data, keyStr) => {
-    if(!data || !keyStr){
-        return data
+    if(!data || !keyStr || 
+        typeof keyStr !== 'string'){
+        return {lastWrap: data, lastKey: keyStr}
     }
     let keyList = []
     let finalData = data 

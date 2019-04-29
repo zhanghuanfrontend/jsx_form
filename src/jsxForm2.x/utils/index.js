@@ -6,7 +6,8 @@ export {
 } from './commonFn'
 
 export {
-    JSXFormData
+    JSXFormData,
+    JSXFormGlobalData
 } from './context'
 
 export {

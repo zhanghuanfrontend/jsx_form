@@ -1,5 +1,11 @@
 import React from 'react'
-import { JSXFormData, modifyKeyValue, getKeyValue } from './utils'
+import { 
+    JSXFormData, 
+    modifyKeyValue, 
+    getKeyValue,
+    JSXFormGlobalData,
+    cloneData,
+} from './utils'
 import Schema from 'async-validator'
 const validator = new Schema({})
 import FormItem from './FormItem'
@@ -19,6 +25,14 @@ export default class JSXForm extends React.Component {
         }
         if(props.labelWidth){
             this.JSXFormData.labelWidth = props.labelWidth
+        }
+
+        // 暴露给外层的数据
+        this.info = {
+            data: this.JSXFormData.formData,
+            setValue: this.setValue,
+            getValue: this.getValue,
+            cloneData: cloneData,
         }
     }
     componentWillReceiveProps(nextProps){
@@ -46,7 +60,13 @@ export default class JSXForm extends React.Component {
     updateFormData = (key, value) => {
         const { formData = {}, eleList = {}, validResults = {} } = this.JSXFormData
         const { onChange } = this.props
-        const newFormData = modifyKeyValue(formData, key, value)
+        let newFormData = formData
+        if(typeof value === 'undefined'){
+            newFormData = key
+            this.JSXFormData.formData = key
+        }else{
+            newFormData = modifyKeyValue(formData, key, value)
+        }
         const modifyFns = eleList[key] || []
         modifyFns.forEach(Fn => {
             if(Fn && Fn instanceof Function){
@@ -72,9 +92,11 @@ export default class JSXForm extends React.Component {
     }
     render() {
         return <div className="jsx-form-area">
-            <JSXFormData.Provider value={this.JSXFormData}>
-                {this.props.children}
-            </JSXFormData.Provider>
+            <JSXFormGlobalData.Provider value={this.info}>
+                <JSXFormData.Provider value={this.JSXFormData}>
+                    {this.props.children}
+                </JSXFormData.Provider>
+            </JSXFormGlobalData.Provider>
         </div>
     }
 }

@@ -18,7 +18,7 @@ module.exports = (curProp, newProp, option) => {
         index = vars[1].trim()
     }
     newProp.loopEle = {
-        loopVar: getKeyList(option.valueAttr, loopVar),
+        loopVar,
         index,
         item,
     }
