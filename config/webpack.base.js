@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const devMode = process.env.NODE_ENV !== 'production'
 const path = require('path')
+const JSXFormLoader = require('../dist/loader.js')
 
 const webpackPlugins = []
 let externals = {}
@@ -28,9 +29,10 @@ if(devMode){
     }
 }
 const fileName = devMode ? 'static/js/[name].[id].[hash].js' : 'index.min.js'
+const entry = devMode ? paths.testEntry : paths.buildEntry
 
 module.exports = {
-    entry: devMode ? paths.testEntry : paths.buildEntry,
+    entry,
     output: {
         filename: fileName,
         path: paths.output,
@@ -88,37 +90,6 @@ module.exports = {
                     }
                 ]
             },
-            // {
-            //     test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-            //     use: [
-            //         {
-            //             loader: 'url-loader',
-            //             options: {
-            //                 limit: 10000,
-            //                 name: 'static/media/[name].[hash:8].[ext]',
-            //             }
-            //         }
-            //     ]
-            // },
-            // {
-            //     exclude: [
-            //         /\.(config|overrides|variables)$/,
-            //         /\.html$/,
-            //         /\.(js|jsx)$/,
-            //         /\.css$/,
-            //         /\.json$/,
-            //         /\.bmp$/,
-            //         /\.gif$/,
-            //         /\.jpe?g$/,
-            //         /\.png$/,
-            //         /\.scss$/,
-            //         /\.less$/,
-            //     ],
-            //     loader: require.resolve( 'file-loader' ),
-            //     options: {
-            //         name: 'static/media/[name].[hash:8].[ext]',
-            //     },
-            // }
         ]
     },
     plugins: webpackPlugins,

@@ -51,7 +51,9 @@ const getPropStr = (props) => {
     let propStr = ''
     const keys = Object.keys(props)
     keys.forEach(key => {
-        propStr += `${key}: ${props[key]}, `
+        if(key && props[key]){
+            propStr += `${key}: ${props[key]}, `
+        }
     })
     return `{${propStr}}`
 }
@@ -64,9 +66,7 @@ const wrapChildren = (type = 'origin', children, option) => {
         case 'global':
             const JSXForm = option.JSXFormName
             return `<${JSXForm}.JSXFormGlobalData.Consumer>
-            {_self => <>
-                {${children}}
-            </>}
+            {_self => ${children}}
             </${JSXForm}.JSXFormGlobalData.Consumer>`
     }
 }

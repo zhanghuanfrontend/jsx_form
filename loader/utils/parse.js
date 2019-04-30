@@ -7,14 +7,18 @@ const { getParamList, getAttrValue, replaceFunctionParam } = commonFn
 const options = {
     presets: ['@babel/preset-react']
 }
-// const options = {
-//     presets: ['react']
-// }
 
 // 解析处理JSXForm内容
 parseReactElement = (reactCode, option) => {
     if(Array.isArray(reactCode)){
-        return reactCode.map(item => parseReactElement(item, option))
+        if(reactCode.length === 0){
+            return null
+        }
+        const reactStr = reactCode.map(item => parseReactElement(item, option))
+        if(reactCode.length === 1){
+            return reactStr
+        }
+        return `<>{[${reactStr}]}</>`
     }
     // 去掉多余的空格
     const reactEle = reactCode.replace(/\s+/g, ' ').trim()
@@ -27,9 +31,9 @@ parseReactElement = (reactCode, option) => {
 
 module.exports = (template) => {
     // 识别是否存在JSX_Form组件
-    const reg = /import\s+(.*?)\s+from\s+['"]react_jsx_form['"]/gm
-    const testReg = /import\s+(.*?)\s+from\s+['"](\.\.\/){3}src['"]/gm
-    const matchJSXForm = testReg.exec(template)
+    const reg = /import\s+(.*?)\s+from\s+['"](react_jsx_form|(\.\.\/){3}src)['"]/gm
+    // const testReg = /import\s+(.*?)\s+from\s+['"](\.\.\/){3}src['"]/gm
+    const matchJSXForm = reg.exec(template)
     if(!matchJSXForm){
         return template
     }
@@ -41,12 +45,8 @@ module.exports = (template) => {
         JSXFormName,
     }
     return template.replace(regJSXCon, (match, propStr) => {
-        // 获取value属性的值
-        const valueAttr = getAttrValue('value', propStr).slice(1, -1)
-        option.valueAttr = valueAttr
         const reactCode = babel.transform(match, options).code.slice(0, -1)
         const parsedCode = parseReactElement(reactCode, option)
-        console.log(`{${parsedCode}}`)
         return `{${parsedCode}}`
     })
 }

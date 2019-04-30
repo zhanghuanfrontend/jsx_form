@@ -2,7 +2,7 @@
 // v-model指令，添加JSXForm.FormItem父组件
 module.exports = (curProp, newProp, option) => {
     const props = curProp.props || {}
-    let dataKey = props['v-model'] || ''
+    let dataKey = props['v-model'] || undefined
     if(option.loopInfo && option.loopInfo.item){
         const loopInfo = option.loopInfo || {}
         dataKey = dataKey.replace(loopInfo.item, `\${mapKey}.\${${loopInfo.index}}`)

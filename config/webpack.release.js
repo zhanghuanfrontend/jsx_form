@@ -9,8 +9,8 @@ module.exports = {
     plugins: [
         ...webpackBase.plugins,
         // 删除上次打包文件
-        new CleanWebpackPlugin(),
-        // new BundleAnalyzerPlugin(),
+        // new CleanWebpackPlugin(),
+        new BundleAnalyzerPlugin(),
     ],
     optimization: {
         minimizer: [

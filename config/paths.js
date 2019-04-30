@@ -10,8 +10,10 @@ const proxy = {
 module.exports = {
     testEntry: resolve('../example/index.js'),
     buildEntry: resolve('../src/index.js'),
+    loaderEntry: resolve('../loader/index.js'),
     output: resolve('../dist'),
     srcPath: resolve('../src'),
+    loaderPath: resolve('../loader'),
     testPath: resolve('../example'),
     rootHtml: resolve('../public/index.html'),
     module: resolve('../node_modules'),
