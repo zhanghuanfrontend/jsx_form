@@ -29,8 +29,30 @@
         text-align: center;
         padding: 15px 0;
     }
+    .parse-code-header {
+        display: flex;
+        height: 32px;
+        margin-top: -32px;
+        padding-left: 25px;
+        .tab {
+            background: #fff;
+            border: solid 1px #ddd;
+            border-bottom: 0;
+            padding: 0 15px;
+            line-height: 32px;
+            cursor: pointer;
+            &:first-child {
+                border-right: 0;
+            }
+            &.active {
+                background: #1690ff;
+                border-color: #1690ff;
+                color: #fff;
+            }
+        }
+    }
     .parsed-code-display {
-        height: 300px;
+        height: 400px;
         overflow: auto;
         background: #f0eff0;
         pre {

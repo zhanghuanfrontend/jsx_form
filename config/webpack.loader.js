@@ -45,6 +45,18 @@ module.exports = {
             commonjs2: '@babel/core',
             root: '@babel/core',
             amd: '@babel/core'
+        },
+        'react': {
+            commonjs: 'react',
+            commonjs2: 'react',
+            root: 'react',
+            amd: 'react'
+        },
+        'react_jsx_form': {
+            commonjs: 'react_jsx_form',
+            commonjs2: 'react_jsx_form',
+            root: 'react_jsx_form',
+            amd: 'react_jsx_form'
         }
     },
     mode: 'production'

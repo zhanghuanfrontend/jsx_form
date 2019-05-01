@@ -19,7 +19,8 @@ export default class FormItem extends React.Component {
         this.isReRender = true
     }
     shouldComponentUpdate(nextProps, nextState) {
-        return this.isReRender
+        const { localUpdate = true } = this.JSXFormData
+        return !localUpdate || this.isReRender
     }
     // 修改value
     modifyValue = (value) => {
@@ -131,7 +132,6 @@ export default class FormItem extends React.Component {
         const {label = '', className = '', labelWidth, dataKey} = this.props
         const {errMsg} = this.state
         let totalLabelWidth = (this.JSXFormData || {}).labelWidth
-        console.log(totalLabelWidth)
         return <div className={`jsx-form-form-item ${className ? className : ''}`}>
             {
                 label && 

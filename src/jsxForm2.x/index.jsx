@@ -11,9 +11,11 @@ const validator = new Schema({})
 import FormItem from './FormItem'
 import './index.less'
 
+const globalKeys = ['localUpdate', 'labelWidth']
+
 export default class JSXForm extends React.Component {
     constructor(props){
-        super()
+        super(props)
         this.state = {}
         // 存储context数据
         this.JSXFormData = {
@@ -22,11 +24,9 @@ export default class JSXForm extends React.Component {
             eleList: {},
             validResults: {},
             validator,
+            localUpdate: props.localUpdate,
+            labelWidth: props.labelWidth
         }
-        if(props.labelWidth){
-            this.JSXFormData.labelWidth = props.labelWidth
-        }
-
         // 暴露给外层的数据
         this.info = {
             data: this.JSXFormData.formData,
@@ -36,9 +36,15 @@ export default class JSXForm extends React.Component {
         }
     }
     componentWillReceiveProps(nextProps){
-        if(nextProps.value && nextProps.value !== this.props){
+        if(nextProps.value && nextProps.value !== this.props.value){
             this.spreadDataChange(nextProps.value)
         }
+        const updateKeys = Object.keys(nextProps)
+        updateKeys.forEach(key => {
+            if(nextProps[key] !== this.props[key] && globalKeys.includes(key)){
+                this.JSXFormData[key] = nextProps[key]
+            }   
+        })
     }
     // 广播数据的修改
     spreadDataChange = (value = {}) => {
