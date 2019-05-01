@@ -75,3 +75,38 @@ export const modifyKeyValue = (data, keyStr, value) => {
     lastWrap[lastKey] = value
     return data
 }
+
+// 获取值并赋值
+export const getAndSetKeyValue = (data, keyStr, value) => {
+    if(!data || !keyStr){
+        return data
+    }
+    let keyList = []
+    let finalData = data 
+    if(keyStr.includes('.')){
+        keyList = keyStr.split('.')
+    }else{
+        keyList = [keyStr]
+    }
+    let len = keyList.length
+    for(let i = 0; i < len; i++) {
+        const key = keyList[i]
+        if(finalData[key] instanceof Object){
+            finalData = finalData[key]
+        }else if(typeof finalData[key] === 'undefined'){
+            if(i === len - 1){
+                finalData[key] = value
+                return value
+            }else {
+                finalData[key] = /^\d+$/.test(keyList[i + 1]) ? [] : {}
+                finalData = finalData[key]
+            }
+        }else {
+            if(value){
+                finalData[key] = value
+            }
+            return finalData[key]
+        }
+    }
+    return value
+}

@@ -15,7 +15,9 @@ module.exports = (curProp, newProp, option) => {
             label: props['v-label'] || '',
             labelWidth: props['v-label-width'],
             className: props['v-class'],
-            validate: props['v-validate']
+            validate: props['v-validate'],
+            initValue: props['v-init'],
+            packing: props['v-packing'],
         }
     }
 }

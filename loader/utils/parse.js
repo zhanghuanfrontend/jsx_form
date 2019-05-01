@@ -33,7 +33,7 @@ module.exports = (template, transform, babelOption) => {
     }
     const JSXFormName = matchJSXForm[1]
     // 读取JSXForm内容
-    const regJSXCon = new RegExp(`<\\s*${JSXFormName}([\\s\\S]*?)(?<=[^=])>[\\s\\S]*<\\s*\\/\\s*${JSXFormName}\\s*>`, 'gm')
+    const regJSXCon = new RegExp(`<\\s*${JSXFormName}([\\s\\S]*?)(?<=[^=])>[\\s\\S]*?<\\s*\\/\\s*${JSXFormName}\\s*>`, 'gm')
     const option = {
         parseReact: parseReactElement,
         JSXFormName,

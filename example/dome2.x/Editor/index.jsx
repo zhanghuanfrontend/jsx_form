@@ -32,6 +32,9 @@ export default class Editor extends React.Component {
             theme: 'tomorrow-night-eighties',      // 使用monokai模版
         });
     }
+    componentDidCatch(err){
+        console.log(err)
+    }
     parseDir = () => {
         const code = this.editor.getValue()
         const parseCode = JSXFormLoader.parse(code)

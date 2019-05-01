@@ -19,7 +19,7 @@ export default class JSXForm extends React.Component {
         this.state = {}
         // 存储context数据
         this.JSXFormData = {
-            formData: props.value || {},
+            formData: cloneData(props.value) || {},
             setFormData: this.updateFormData,
             eleList: {},
             validResults: {},
@@ -34,6 +34,8 @@ export default class JSXForm extends React.Component {
             getValue: this.getValue,
             cloneData: cloneData,
         }
+        // 注册监听的函数
+        this.watchFn = {}
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.value && nextProps.value !== this.props.value){
@@ -65,7 +67,8 @@ export default class JSXForm extends React.Component {
     // 修改表单的值
     updateFormData = (key, value) => {
         const { formData = {}, eleList = {}, validResults = {} } = this.JSXFormData
-        const { onChange } = this.props
+        const { onChange, watch = {} } = this.props
+        const prev = getKeyValue(formData, key)
         let newFormData = formData
         if(typeof value === 'undefined'){
             newFormData = key
@@ -84,6 +87,18 @@ export default class JSXForm extends React.Component {
                 onChange(JSON.stringify(validResults) === '{}', newFormData)
             }
         })
+        // 触发监听
+        const watchFn = watch[key]
+        if(watchFn && watchFn instanceof Function){
+            watchFn(prev, value)
+        }
+        // 触发注册的监听函数
+        const watchFnList = this.watchFn[key] || []
+        watchFnList.forEach(watchFn => {
+            if(watchFn && watchFn instanceof Function){
+                watchFn(prev, value)
+            }
+        })
     }
     // 获取指定key的值
     getValue = (key) => {
@@ -93,8 +108,18 @@ export default class JSXForm extends React.Component {
         }
         return getKeyValue(formData, key)
     }
+    // 设置指定key的值
     setValue = (key, value) => {
         this.updateFormData(key, value)
+    }
+    // 监听指定key的值
+    watch = (key, callback) => {
+        if(!this.watchFn[key]){
+            this.watchFn[key] = []
+        }
+        if(!this.watchFn[key].includes(callback)){
+            this.watchFn[key].push(callback)
+        }
     }
     render() {
         return <div className="jsx-form-area">

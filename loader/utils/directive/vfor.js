@@ -21,6 +21,7 @@ module.exports = (curProp, newProp, option) => {
         loopVar,
         index,
         item,
+        initValue: curProp.props['v-init']
     }
     // 添加v-for变量信息
     option.loopInfo = {

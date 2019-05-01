@@ -8,10 +8,11 @@ const injectCode = `import JSXForm from 'react_jsx_form'`
 const dealRes = (code) => {
     const codeStr = `${injectCode}${code}`
     const parseCode = parse(codeStr, transform, {})
+    const strictReg = /("|')use strict("|');/g
     // 对解析结果进行进一步处理
     const displayCode = parseCode
         .replace(injectCode, '')
-        .replace('"use strict";', '')
+        .replace(strictReg, '')
         .replace(/(<>|<\/>)/g, (match) => {
             if(match === '<>'){
                 return '<div>'
@@ -20,7 +21,7 @@ const dealRes = (code) => {
         })
     return transform(`<div>${displayCode}</div>`)
         .code
-        .replace('"use strict";', '')
+        .replace(strictReg, '')
         .trim()
 }
 

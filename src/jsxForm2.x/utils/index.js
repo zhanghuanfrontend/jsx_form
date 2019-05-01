@@ -3,6 +3,7 @@ export {
     modifyKeyValue,
     cloneData,
     isValueEqual,
+    getAndSetKeyValue,
 } from './commonFn'
 
 export {

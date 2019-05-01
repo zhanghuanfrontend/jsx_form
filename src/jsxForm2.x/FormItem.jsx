@@ -4,7 +4,8 @@ import {
     getKeyValue, 
     getRules, 
     cloneData, 
-    isValueEqual 
+    isValueEqual,
+    getAndSetKeyValue
 } from './utils'
 import { instanceOf } from 'prop-types';
 
@@ -35,7 +36,7 @@ export default class FormItem extends React.Component {
         if(this.JSXFormData){
             return
         }
-        const { dataKey } = this.props
+        const { dataKey, initValue } = this.props
         this.JSXFormData = context
         // 注册修改函数
         const eleList = this.JSXFormData.eleList
@@ -46,12 +47,13 @@ export default class FormItem extends React.Component {
             eleList[dataKey].push(this.modifyValue)
         }
         // 初始化FormItem的值
-        const value = getKeyValue(context.formData, dataKey)
-        this.setState({value: cloneData(value)})
+        const value = getAndSetKeyValue(context.formData, dataKey, initValue)
+        
+        this.setState({value: cloneData(initValue || value)})
     }
     // 获取修改后onChange
     getOnChangeFn = (onChangeFn) => {
-        const { dataKey } = this.props
+        const { dataKey, packing = {}} = this.props
         const setFormData = this.JSXFormData.setFormData
         return (event) => {
             if(onChangeFn && onChangeFn instanceof Function){
@@ -65,15 +67,20 @@ export default class FormItem extends React.Component {
                     value = event.target.checked
                 }
             }
+            let curValue = value
+            // 如果有v-packing指令
+            if(packing && packing.output && packing.output instanceof Function){
+                curValue = packing.output(value)
+            }
             // 调用修改函数
             if(setFormData && setFormData instanceof Function){
-                setFormData(dataKey, value)
+                setFormData(dataKey, curValue)
             }
         }
     }
     // 注入value
     parseFormItem = () => {
-        const { children, dataKey } = this.props
+        const { children, dataKey, packing = {} } = this.props
         const { value } = this.state
         if(!this.JSXFormData || !children){
             return
@@ -88,10 +95,15 @@ export default class FormItem extends React.Component {
             return children(value, dataKey)
         }
         const prev = children.props.value
+        let curValue = value
+        // 如果有v-packing指令
+        if(packing && packing.input && packing.input instanceof Function){
+            curValue = packing.input(value)
+        }
         if(prev !== value){
             children.props = {
                 ...children.props,
-                value,
+                value: curValue
             }
         }
         const onChangeFn = children.props.onChange

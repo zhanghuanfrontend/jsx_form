@@ -92,7 +92,7 @@ const getReactElement = (newProp, option) => {
     // 如果存在循环展现的元素
     if(newProp.loopEle && newProp.loopEle.loopVar){
         const loopObj = newProp.loopEle || {}
-        reactComp =  `<${JSXForm}.FormItem dataKey="${loopObj.loopVar}">
+        reactComp =  `<${JSXForm}.FormItem dataKey="${loopObj.loopVar}" initValue={${loopObj.initValue}}>
         {
             (mapData, mapKey) => 
             (mapData || []).map((${loopObj.item}${loopObj.index ? `,${loopObj.index}` : ''}) => {
