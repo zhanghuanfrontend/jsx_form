@@ -1,8 +1,9 @@
 import React from 'react'
 // import TestBase from './TestBase'
 // import Base from './Base'
-import Dynamic from './Dynamic'
-import BaseForm from './BaseForm'
+// import Dynamic from './Dynamic'
+// import BaseForm from './BaseForm'
+import Editor from './Editor'
 
 export default class Main extends React.Component {
     render() {
@@ -14,8 +15,9 @@ export default class Main extends React.Component {
         return <>
             {/* <TestBase /> */}
             {/* <Base /> */}
-            <Dynamic />
-            <BaseForm />
+            {/* <Dynamic /> */}
+            {/* <BaseForm /> */}
+            <Editor />
         </>
     }
 }

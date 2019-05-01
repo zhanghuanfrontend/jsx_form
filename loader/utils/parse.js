@@ -1,12 +1,6 @@
 const parseDir = require('./parseDir')
 const commonFn = require('./commonFn')
-const babel = require('@babel/core')
-
 const { getParamList, getAttrValue, replaceFunctionParam } = commonFn
-
-const options = {
-    presets: ['@babel/preset-react']
-}
 
 // 解析处理JSXForm内容
 parseReactElement = (reactCode, option) => {
@@ -29,9 +23,9 @@ parseReactElement = (reactCode, option) => {
     })
 }
 
-module.exports = (template) => {
+module.exports = (template, transform, babelOption) => {
     // 识别是否存在JSX_Form组件
-    const reg = /import\s+(.*?)\s+from\s+['"](react_jsx_form|(\.\.\/){3}src)['"]/gm
+    const reg = /^import\s+(.*?)\s+from\s+['"](react_jsx_form|(\.\.\/){3}src)['"]/gm
     // const testReg = /import\s+(.*?)\s+from\s+['"](\.\.\/){3}src['"]/gm
     const matchJSXForm = reg.exec(template)
     if(!matchJSXForm){
@@ -45,7 +39,7 @@ module.exports = (template) => {
         JSXFormName,
     }
     return template.replace(regJSXCon, (match, propStr) => {
-        const reactCode = babel.transform(match, options).code.slice(0, -1)
+        const reactCode = transform(match, babelOption).code.slice(0, -1)
         const parsedCode = parseReactElement(reactCode, option)
         return `{${parsedCode}}`
     })

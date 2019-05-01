@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const devMode = process.env.NODE_ENV !== 'production'
 const path = require('path')
 const JSXFormLoader = require('../dist/loader.js')
+const TestFormLoader = path.resolve(__dirname, '../loader/index.js')
 
 const webpackPlugins = []
 let externals = {}
@@ -65,7 +66,7 @@ module.exports = {
                         }
                     },
                     {
-                        loader: path.resolve(__dirname, '../loader/index.js'),
+                        loader: TestFormLoader
                     }
                 ]
             },

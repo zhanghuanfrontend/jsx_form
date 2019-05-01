@@ -9,7 +9,7 @@
     "build": "cross-env NODE_ENV=production webpack --config ./config/webpack.release.js --color --progress",
     "loader": "webpack --config ./config/webpack.loader.js --color --progress",
     "eslint": "eslint src --ext .js --cache --fix",
-    "publish" : "npm publish --registry=https://registry.npmjs.org",
+    "publish": "npm publish --registry=https://registry.npmjs.org",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -58,7 +58,9 @@
   "dependencies": {
     "antd": "^3.16.2",
     "async-validator": "^1.11.0",
+    "codemirror": "^5.46.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-syntax-highlighter": "^10.2.1"
   }
 }

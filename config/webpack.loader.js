@@ -1,10 +1,14 @@
 const paths = require('./paths')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const path = require('path')
 
 module.exports = {
-    entry: paths.loaderEntry,
+    entry: {
+        'loader': path.resolve(__dirname, '../loader/index.js'),
+        'browser': path.resolve(__dirname, '../loader/browser.js')
+    },
     output: {
-        filename: 'loader.min.js',
+        filename: '[name].min.js',
         path: paths.output,
         libraryTarget: 'commonjs2'
     },

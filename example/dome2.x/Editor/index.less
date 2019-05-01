@@ -1,0 +1,40 @@
+.online-parse-and-exec-area {
+    margin: 20px;
+    border: solid 1px #ddd;
+    .code-editor-and-exec-area {
+        display: flex;
+        height: 300px;
+        align-items: stretch;
+        .code-editor-area {
+            flex: 1 1 auto;
+            overflow: auto;
+        }
+        .exec-code {
+            width: 50px;
+            margin: 0 20px;
+        }
+        .code-display-area {
+            width: 350px;
+            flex: 0 0 auto;
+            padding: 20px 30px;
+            border-bottom: solid 1px #ddd;
+            .form-area {
+                border: solid 1px #ddd;
+                padding: 20px;
+                border-radius: 4px;
+            }
+        }
+    }
+    .exec-code {
+        text-align: center;
+        padding: 15px 0;
+    }
+    .parsed-code-display {
+        height: 300px;
+        overflow: auto;
+        background: #f0eff0;
+        pre {
+            margin: 0;
+        }
+    }
+}

@@ -46,9 +46,7 @@ export default class FormItem extends React.Component {
         }
         // 初始化FormItem的值
         const value = getKeyValue(context.formData, dataKey)
-        if(this.state.value !== value){
-            this.setState({value: cloneData(value)})
-        }
+        this.setState({value: cloneData(value)})
     }
     // 获取修改后onChange
     getOnChangeFn = (onChangeFn) => {
@@ -133,6 +131,7 @@ export default class FormItem extends React.Component {
         const {label = '', className = '', labelWidth, dataKey} = this.props
         const {errMsg} = this.state
         let totalLabelWidth = (this.JSXFormData || {}).labelWidth
+        console.log(totalLabelWidth)
         return <div className={`jsx-form-form-item ${className ? className : ''}`}>
             {
                 label && 
