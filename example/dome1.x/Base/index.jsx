@@ -33,9 +33,7 @@ export default class Base extends React.Component {
             >
                 <Input v-model="param" v-label="param" v-validate={['required', /^[a-zA-Z_]+$/g]} />
                 <Select v-model="os" allowClear v-label="操作系统" v-validate={['required']}>
-                    {
-                        osList.map(item => <Option key={item} value={item}>{item}</Option>)
-                    }
+                    <Option v-for="item in {osList}" key={item} value={item}>{item}</Option>
                 </Select>
                 <RadioGroup v-label="类型" v-model="type">
                     {

@@ -31,9 +31,7 @@ export default class Base extends React.Component {
                 <div v-for="(item, index) in paramList">
                     <Input v-model="item.name" v-label={`名称${index}`} />
                     <Select v-model="item.os" style={{width: '100%'}} allowClear v-label="操作系统">
-                        {
-                            osList.map(item => <Option key={item} value={item}>{item}</Option>)
-                        }
+                        <Option v-for="osItem in {osList}" key={osItem} value={osItem}>{osItem}</Option>
                     </Select>
                     <div className="add-btn" 
                         v-show={index === _self.getValue('paramList').length - 1} 
@@ -43,7 +41,7 @@ export default class Base extends React.Component {
                                 name: '测试123',
                                 os: '234'
                             })
-                            _self.setValue('paramList', _self.cloneData(list))
+                            _self.setValue('paramList', list)
                         }
                     }>+</div>
                     <div className="delete-btn" 
@@ -51,7 +49,7 @@ export default class Base extends React.Component {
                         onClick={() => {
                             const list = _self.getValue('paramList')
                             list.splice(index, 1)
-                            _self.setValue('paramList', _self.cloneData(list))
+                            _self.setValue('paramList', list)
                         }
                     }>
                         <Icon theme="filled" type="delete" />
@@ -61,14 +59,3 @@ export default class Base extends React.Component {
         </div>
     }
 }
-
-{/* <div className="add-btn" v-bind={() => {}} onClick={() => {
-    const paramList = this.JSXForm.current.getValue('paramList')
-    console.log(paramList)
-    paramList.push({
-        name: '',
-        type: '',
-        desc: ''
-    })
-    this.JSXForm.current.setValue('paramList', paramList)
-}}>+</div> */}

@@ -1,9 +1,10 @@
 import React from 'react'
 import CodeMirror from 'codemirror'
-import { Button, Icon, Input }  from 'antd';
+import { Button, Icon, Input, Select, Radio }  from 'antd';
 import JSXForm from 'src/index.js'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { codeExample } from './testData'
+import {osList, typeList} from './testData'
 import JSXFormLoader from 'loader/browser.js'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/tomorrow-night-eighties.css'
@@ -11,6 +12,10 @@ import 'codemirror/mode/htmlmixed/htmlmixed.js'
 import 'codemirror/addon/display/fullscreen.css'
 import './index.less'
 const res = React.createElement('div', {}, null)
+
+const Option = Select.Option
+const RadioGroup = Radio.Group
+const TextArea = Input.TextArea
 
 export default class Editor extends React.Component {
     constructor(){
@@ -42,6 +47,14 @@ export default class Editor extends React.Component {
             const dependence = {
                 Input,
                 Button,
+                Select,
+                Option,
+                Radio,
+                RadioGroup,
+                osList,
+                typeList,
+                TextArea,
+                Icon,
             }
             const ReactEle = JSXFormLoader.parseReact(parseCode, dependence)
             this.setState({codeString: parseCode, reactElement: ReactEle})

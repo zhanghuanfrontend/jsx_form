@@ -5,31 +5,29 @@
 // </JSXForm>
 // `
 
-export const codeExample = `<div><div className="results-area">
-<JSXForm value={{
-    list: [
-        {
-            name: 'money'
-        }
-    ]
-}}  
-    watch={{
-        'paramList.0.type': (prev, curr) => {
-            console.log(prev, curr)
-        }   
-    }}
-labelWidth={50}>
-    <Input v-model="name" v-label="name1" v-init="test" />
-    <Input v-model="param.name" v-label="name2" onChange={() => {
-        _self.setValue('list.0.name', 'linkage')
-    }} />
-    <Input v-model="list.0.name" v-label="name2" />
-    <div v-for="(item, index) in paramList" v-init={[{type: 'name'}]}>
-        <Input v-model="item.type" />
-    </div>
-</JSXForm>
-</div>
-<div>
-    <JSXForm></JSXForm>
-</div>
-</div>`
+export const codeExample = `<JSXForm 
+onChange={(valid, data) => console.log(data)}
+>
+<Input v-model="param" v-label="param:" v-validate={['required', /^[a-zA-Z_]+$/g]} />
+<Select v-model="os" allowClear v-label="操作系统" v-validate={['required']}>
+    <Option v-for="(osItem, idx) in {osList}" key={osItem} value={osItem}>{osItem}</Option>
+</Select>
+<RadioGroup v-label="类型:" v-model="type">
+    <Radio v-for="typeItem in {typeList}" key={typeItem} value={typeItem}>{typeItem}</Radio>
+</RadioGroup>
+<TextArea v-label="描述" v-model="desc" rows="3"></TextArea>
+<Button className="submit-btn" type="primary">提交</Button>
+</JSXForm>`
+
+
+
+export const osList = [
+    'iOS',
+    'Android',
+    '服务端',
+    'Wap端',
+    'Web',
+    'Mac'
+]
+
+export const typeList = ['string', 'integer', 'float']

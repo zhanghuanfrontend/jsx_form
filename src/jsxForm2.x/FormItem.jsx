@@ -48,7 +48,6 @@ export default class FormItem extends React.Component {
         }
         // 初始化FormItem的值
         const value = getAndSetKeyValue(context.formData, dataKey, initValue)
-        
         this.setState({value: cloneData(initValue || value)})
     }
     // 获取修改后onChange
@@ -61,7 +60,7 @@ export default class FormItem extends React.Component {
                 onChangeFn()
             }
             let value = event
-            if(event && event.target instanceof Element){
+            if(event && event.target instanceof Object){
                 value = event.target.value
                 if(typeof event.target.value === 'undefined'){
                     value = event.target.checked
@@ -92,6 +91,7 @@ export default class FormItem extends React.Component {
             return children
         }
         if(children instanceof Function){
+            console.log(value, dataKey)
             return children(value, dataKey)
         }
         const prev = children.props.value

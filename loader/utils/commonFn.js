@@ -2,9 +2,10 @@
 // 获取参数列表
 const getParamList = (param, splitChars = ',') => {
     const paramStr = param.replace(/\s+/g, ' ').trim()
-    const stackLen = [0, 0, 0]
+    const stackLen = [0, 0, 0, 0]
     const leftChar = ['(', '[', '{']
     const rightChar = [')', ']', '}']
+    const symbol = ['"', "'"]
     const paramList = []
     let start = 0
     let len = paramStr.length
@@ -17,6 +18,10 @@ const getParamList = (param, splitChars = ',') => {
         }
         if(rightIdx >= 0){
             stackLen[rightIdx]--
+        }
+        // 如果为引号
+        if(symbol.includes(curWord)){
+            stackLen[3] = (stackLen[3] + 1) % 2
         }
         if(curWord === splitChars && stackLen.every(item => item === 0)){
             paramList.push(paramStr.slice(start, i))

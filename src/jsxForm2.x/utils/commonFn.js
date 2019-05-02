@@ -96,7 +96,7 @@ export const getAndSetKeyValue = (data, keyStr, value) => {
         }else if(typeof finalData[key] === 'undefined'){
             if(i === len - 1){
                 finalData[key] = value
-                return value
+                return finalData[key]
             }else {
                 finalData[key] = /^\d+$/.test(keyList[i + 1]) ? [] : {}
                 finalData = finalData[key]
@@ -108,5 +108,5 @@ export const getAndSetKeyValue = (data, keyStr, value) => {
             return finalData[key]
         }
     }
-    return value
+    return finalData
 }

@@ -71,6 +71,25 @@ const wrapChildren = (type = 'origin', children, option) => {
     }
 }
 
+// 拼接v-for指令
+const wrapvForDir = (loopObj, JSXForm, reactStr) => {
+    const paramStr = `${loopObj.item}${loopObj.index ? `,${loopObj.index}` : ''}`
+    let reactComp = `<${JSXForm}.FormItem dataKey="${loopObj.loopVar}" initValue={${loopObj.initValue}}>
+    {
+        (mapData, mapKey) => 
+        (mapData || []).map((${paramStr}) => {
+            return ${reactStr}
+        })
+    }
+    </${JSXForm}.FormItem>`
+    if(loopObj.isStateVar){
+        reactComp = `(${loopObj.loopVar} || []).map((${paramStr}) => {
+            return ${reactStr}
+        })`
+    }
+    return reactComp
+}
+
 // 拼接出React Element
 const getReactElement = (newProp, option) => {
     const JSXForm = option.JSXFormName
@@ -92,14 +111,7 @@ const getReactElement = (newProp, option) => {
     // 如果存在循环展现的元素
     if(newProp.loopEle && newProp.loopEle.loopVar){
         const loopObj = newProp.loopEle || {}
-        reactComp =  `<${JSXForm}.FormItem dataKey="${loopObj.loopVar}" initValue={${loopObj.initValue}}>
-        {
-            (mapData, mapKey) => 
-            (mapData || []).map((${loopObj.item}${loopObj.index ? `,${loopObj.index}` : ''}) => {
-                return ${reactComp}
-            })
-        }
-        </${JSXForm}.FormItem>`
+        reactComp = wrapvForDir(loopObj, JSXForm, reactComp)
     }
     // 如果有c-show指令
     if(newProp.vShow){
