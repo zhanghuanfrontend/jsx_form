@@ -19,6 +19,9 @@ if(devMode){
             collapseInlineTagWhitespace: true,
         }
     }))
+    externals = {
+        echarts: 'echarts'
+    }
 }else{
     externals = {
         'react': {

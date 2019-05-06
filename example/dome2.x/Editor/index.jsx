@@ -4,7 +4,8 @@ import { Button, Icon, Input, Select, Radio }  from 'antd';
 import JSXForm from 'src/index.js'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { codeExample } from './testData'
-import {osList, typeList} from './testData'
+import { address } from '../Linkage/testData'
+import {osList, typeList, paramList} from './testData'
 import JSXFormLoader from 'loader/browser.js'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/tomorrow-night-eighties.css'
@@ -12,6 +13,7 @@ import 'codemirror/mode/htmlmixed/htmlmixed.js'
 import 'codemirror/addon/display/fullscreen.css'
 import './index.less'
 const res = React.createElement('div', {}, null)
+const provinces = Object.keys(address)
 
 const Option = Select.Option
 const RadioGroup = Radio.Group
@@ -53,8 +55,11 @@ export default class Editor extends React.Component {
                 RadioGroup,
                 osList,
                 typeList,
+                paramList,
                 TextArea,
                 Icon,
+                address,
+                provinces,
             }
             const ReactEle = JSXFormLoader.parseReact(parseCode, dependence)
             this.setState({codeString: parseCode, reactElement: ReactEle})

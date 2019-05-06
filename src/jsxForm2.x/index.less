@@ -4,6 +4,9 @@
         align-items: stretch;
         padding-bottom: 18px;
         position: relative;
+        &.form-item-array {
+            padding: 0;
+        }
         .jsx-form-form-item-label {
             width: 70px;
             flex: 0 0 auto;
@@ -11,6 +14,13 @@
             align-items: center;
             font-size: 14px;
             color: #333;
+            .required-hint-area {
+                width: 8px;
+                flex: 0 0 auto;
+                margin-left: -8px;
+                color: #f5222d;
+                font-size: 14px;
+            }
         }
         .jsx-form-form-item-wrap {
             flex: 1 1 auto;
@@ -25,6 +35,8 @@
             bottom: 0;
             font-size: 12px;
             color: #f5222d;
+            height: 18px;
+            line-height: 18px;
         }
     }
 }

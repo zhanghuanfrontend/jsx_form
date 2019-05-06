@@ -86,6 +86,11 @@ const wrapvForDir = (loopObj, JSXForm, reactStr) => {
         reactComp = `(${loopObj.loopVar} || []).map((${paramStr}) => {
             return ${reactStr}
         })`
+    }else if(loopObj.globalRefresh){
+        const defaultValue = loopObj.initValue || []
+        reactComp = `(_self.getValue('${loopObj.loopVar}', true) || ${defaultValue}).map((${paramStr}) => {
+            return ${reactStr}
+        })`
     }
     return reactComp
 }
@@ -126,6 +131,7 @@ const getReactElement = (newProp, option) => {
 module.exports = (eleName, props, children, option) => {
     const { parseReact } = option
     const propObj = parseProps(props)
+    option.eleName = eleName
     // 当前组件的描述
     const curProp = {   
         props: propObj,

@@ -4,6 +4,8 @@ export {
     cloneData,
     isValueEqual,
     getAndSetKeyValue,
+    outputFormData,
+    delayExecFn,
 } from './commonFn'
 
 export {

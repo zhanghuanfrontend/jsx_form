@@ -8,7 +8,7 @@ module.exports = (curProp, newProp, option) => {
     if(!vfor.includes('in')){
         console.error('v-for指令语法错误')
     }
-    let index = ''
+    let index = 'index'
     let item = vfor.split(/\bin\b/)[0].trim()
     let loopVar = vfor.split(/\bin\b/)[1].trim()
     // 提取v-for指令的多个变量
@@ -27,7 +27,8 @@ module.exports = (curProp, newProp, option) => {
         index,
         item,
         isStateVar: !!varMatch,
-        initValue: curProp.props['v-init']
+        initValue: curProp.props['v-init'],
+        globalRefresh: option.eleName === 'Option'
     }
     // 添加v-for变量信息
     option.loopInfo = {

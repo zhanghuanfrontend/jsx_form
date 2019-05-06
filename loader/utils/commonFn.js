@@ -1,4 +1,17 @@
 
+// 深复制data
+const cloneData = (data) => {
+    if(Array.isArray(data)){
+        return data.map(item => cloneData(item))
+    }else if(data instanceof Object){
+        const keys = Object.keys(data)
+        const newData = {}
+        keys.forEach(key => newData[key] = cloneData(data[key]))
+        return newData
+    }
+    return data
+}
+
 // 获取参数列表
 const getParamList = (param, splitChars = ',') => {
     const paramStr = param.replace(/\s+/g, ' ').trim()
@@ -108,4 +121,5 @@ module.exports = {
     getAttrValue,
     getKeyList,
     replaceFunctionParam,
+    cloneData,
 }

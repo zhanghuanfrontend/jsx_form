@@ -5,6 +5,9 @@ import {
     getKeyValue,
     JSXFormGlobalData,
     cloneData,
+    getAndSetKeyValue,
+    outputFormData,
+    delayExecFn,
 } from './utils'
 import Schema from 'async-validator'
 const validator = new Schema({})
@@ -16,23 +19,23 @@ const globalKeys = ['localUpdate', 'labelWidth']
 export default class JSXForm extends React.Component {
     constructor(props){
         super(props)
-        this.state = {}
         // 存储context数据
         this.JSXFormData = {
             formData: cloneData(props.value) || {},
-            setFormData: this.updateFormData,
+            setFormData: this.delayExecFn,
             eleList: {},
             validResults: {},
             validator,
-            localUpdate: props.localUpdate,
+            // localUpdate: props.localUpdate,
             labelWidth: props.labelWidth
         }
-        // 暴露给外层的数据
-        this.info = {
-            data: this.JSXFormData.formData,
-            setValue: this.setValue,
-            getValue: this.getValue,
-            cloneData: cloneData,
+        this.state = {
+            // 暴露给外层的数据
+            info: {
+                data: cloneData(this.JSXFormData.formData),
+                setValue: this.setValue,
+                getValue: this.getValue,
+            }
         }
         // 注册监听的函数
         this.watchFn = {}
@@ -64,27 +67,20 @@ export default class JSXForm extends React.Component {
             })
         })
     }
+    // 延时执行更新
+    delayExecFn = (key, value) => {
+        delayExecFn(key, value, this.updateFormData)
+    }
     // 修改表单的值
-    updateFormData = (key, value) => {
+    updateFormData = (key, value, refresh = false, globalRefresh = false) => {
         const { formData = {}, eleList = {}, validResults = {} } = this.JSXFormData
         const { onChange, watch = {} } = this.props
-        const prev = getKeyValue(formData, key)
-        let newFormData = formData
-        if(typeof value === 'undefined'){
-            newFormData = key
-            this.JSXFormData.formData = key
-        }else{
-            newFormData = modifyKeyValue(formData, key, value)
-        }
+        const prev = getAndSetKeyValue(formData, key)
+        modifyKeyValue(formData, key, value)
         const modifyFns = eleList[key] || []
         modifyFns.forEach(Fn => {
             if(Fn && Fn instanceof Function){
                 Fn(value)
-            }
-        })
-        setTimeout(() => {
-            if(onChange && onChange instanceof Function){
-                onChange(JSON.stringify(validResults) === '{}', newFormData)
             }
         })
         // 触发监听
@@ -99,18 +95,34 @@ export default class JSXForm extends React.Component {
                 watchFn(prev, value)
             }
         })
+        // 延迟刷新
+        if(refresh){
+            setTimeout(() => {
+                if(onChange && onChange instanceof Function){
+                    onChange(JSON.stringify(validResults) === '{}', outputFormData(formData))
+                }
+            })
+        }
+        // 全局刷新
+        if(globalRefresh){
+            this.setState({info: {...this.state.info}})
+        }
     }
     // 获取指定key的值
     getValue = (key) => {
         const { formData = {} } = this.JSXFormData
         if(!key){
-            return formData
+            return outputFormData(formData)
         }
         return getKeyValue(formData, key)
     }
     // 设置指定key的值
     setValue = (key, value) => {
-        this.updateFormData(key, value)
+        if(!key){
+            console.err('请传入正确的key')
+            return
+        }
+        this.delayExecFn(key, value)
     }
     // 监听指定key的值
     watch = (key, callback) => {
@@ -122,8 +134,9 @@ export default class JSXForm extends React.Component {
         }
     }
     render() {
-        return <div className="jsx-form-area">
-            <JSXFormGlobalData.Provider value={this.info}>
+        const { className = '' } = this.props
+        return <div className={`jsx-form-area ${className}`}>
+            <JSXFormGlobalData.Provider value={this.state.info}>
                 <JSXFormData.Provider value={this.JSXFormData}>
                     {this.props.children}
                 </JSXFormData.Provider>

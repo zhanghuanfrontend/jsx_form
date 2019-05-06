@@ -36,7 +36,7 @@ export default class FormItem extends React.Component {
         if(this.JSXFormData){
             return
         }
-        const { dataKey, initValue } = this.props
+        const { dataKey, initValue, children } = this.props
         this.JSXFormData = context
         // 注册修改函数
         const eleList = this.JSXFormData.eleList
@@ -47,8 +47,12 @@ export default class FormItem extends React.Component {
             eleList[dataKey].push(this.modifyValue)
         }
         // 初始化FormItem的值
-        const value = getAndSetKeyValue(context.formData, dataKey, initValue)
-        this.setState({value: cloneData(initValue || value)})
+        let curValue = initValue
+        if(children instanceof Function){
+            curValue = curValue || ['']
+        }
+        const value = getAndSetKeyValue(context.formData, dataKey, curValue)
+        this.setState({value: cloneData(value)})
     }
     // 获取修改后onChange
     getOnChangeFn = (onChangeFn) => {
@@ -57,7 +61,7 @@ export default class FormItem extends React.Component {
         return (event) => {
             if(onChangeFn && onChangeFn instanceof Function){
                 // 执行已有的onChange事件
-                onChangeFn()
+                onChangeFn(event)
             }
             let value = event
             if(event && event.target instanceof Object){
@@ -91,7 +95,6 @@ export default class FormItem extends React.Component {
             return children
         }
         if(children instanceof Function){
-            console.log(value, dataKey)
             return children(value, dataKey)
         }
         const prev = children.props.value
@@ -141,13 +144,19 @@ export default class FormItem extends React.Component {
         })
     }
     render() {
-        const {label = '', className = '', labelWidth, dataKey} = this.props
+        const {label = '', className = '', labelWidth, dataKey, children, validate} = this.props
         const {errMsg} = this.state
         let totalLabelWidth = (this.JSXFormData || {}).labelWidth
-        return <div className={`jsx-form-form-item ${className ? className : ''}`}>
+        return <div className={`jsx-form-form-item ${className ? className : ''} ${children instanceof Function ? 'form-item-array' : ''}`}>
             {
                 label && 
-                <span className="jsx-form-form-item-label" style={{width: labelWidth || totalLabelWidth}}>{label}</span>
+                <span className="jsx-form-form-item-label" style={{width: labelWidth || totalLabelWidth}}>
+                    {
+                        (Array.isArray(validate) && validate.includes('required')) &&
+                        <span className="required-hint-area">*</span>
+                    }
+                    {label}
+                </span>
             }
             <JSXFormData.Consumer>
                 {context => this.getJSXFormData(context)}

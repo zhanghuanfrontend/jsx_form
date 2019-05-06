@@ -1,6 +1,6 @@
 const parseDir = require('./parseDir')
 const commonFn = require('./commonFn')
-const { getParamList, getAttrValue, replaceFunctionParam } = commonFn
+const { getParamList, getAttrValue, replaceFunctionParam, cloneData } = commonFn
 
 // 解析处理JSXForm内容
 parseReactElement = (reactCode, option) => {
@@ -8,7 +8,15 @@ parseReactElement = (reactCode, option) => {
         if(reactCode.length === 0){
             return null
         }
-        const reactStr = reactCode.map(item => parseReactElement(item, option))
+        // 保存loop信息
+        const loopInfo = cloneData(option.loopInfo)
+        const reactStr = reactCode.map(item => {
+            const newOption = {
+                ...option,
+                loopInfo: cloneData(loopInfo)
+            }
+            return parseReactElement(item, newOption)
+        })
         if(reactCode.length === 1){
             return reactStr
         }

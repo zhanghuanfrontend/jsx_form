@@ -1,12 +1,12 @@
 import React from 'react'
-import {BaseForm, Dynamic, Editor, Results} from './index'
+import {BaseForm, Dynamic, Editor, Results, Linkage, Performance} from './index'
 import { Menu } from 'antd'
 
 export default class Main extends React.Component {
     constructor(){
         super()
         this.state = {
-            curMenu: 'editor'
+            curMenu: 'linkage'
         }
     }
     renderComponent = () => {
@@ -20,6 +20,10 @@ export default class Main extends React.Component {
                 return <Editor />
             case 'results':
                 return <Results />
+            case 'linkage':
+                return <Linkage />
+            case 'performance':
+                return <Performance />
         }
     }
     render() {
@@ -29,6 +33,8 @@ export default class Main extends React.Component {
             { name: '增减表单', key: 'dynamic'},
             { name: '在线编辑', key: 'editor'},
             { name: '封装表单数据', key: 'results'},
+            { name: '联动表单', key: 'linkage'},
+            { name: '性能测试', key: 'performance'},
         ]
         
         return <div className="dome-area">
