@@ -1,8 +1,8 @@
 import parse from './utils/parse.js'
 import transform from  './utils/babel-browser.js'
 import React from 'react'
-// import JSXForm from 'src/index.js'
-import JSXForm from 'react_jsx_form'
+import JSXForm from 'src/index.js'
+// import JSXForm from 'react_jsx_form'
 const injectCode = `import JSXForm from 'react_jsx_form'`
 
 const dealRes = (code) => {

@@ -57,15 +57,6 @@ export const findParentWrap = (data, keyStr) => {
     }
 }
 
-// 获取指定key的值
-export const getKeyValue = (data, keyStr) => {
-    if(!data || !keyStr){
-        return data
-    }
-    const {lastKey, lastWrap} = findParentWrap(data, keyStr)
-    return lastWrap[lastKey]
-}
-
 // 获取值并赋值
 export const getAndSetKeyValue = (data, keyStr, value) => {
     if(!data || !keyStr || typeof keyStr !== 'string'){
@@ -93,16 +84,6 @@ export const getAndSetKeyValue = (data, keyStr, value) => {
     }
 }
 
-// 修改指定key的值
-export const modifyKeyValue = (data, keyStr, value) => {
-    if(!data || !keyStr){
-        return data
-    }
-    const {lastKey, lastWrap} = findParentWrap(data, keyStr)
-    lastWrap[lastKey] = value
-    return data
-}
-
 // 剔除输出值的_assistData内容
 export const outputFormData = (data) => {
     const output = cloneData(data)
@@ -115,24 +96,37 @@ let delayCache = {}
 const interTime = 100
 let lastTime = Date.now()
 // 清空缓存，并执行缓存内容
-const clearCache = (Fn) => {
+const clearCache = (Fn, callback) => {
     const keys = Object.keys(delayCache)
     if(Fn && Fn instanceof Function){
-        const len = keys.length
-        let globalRefresh = false
+        const assistKeys = []
+        const modelKeys = []
+        // 辅助数据先进行刷新
         keys.forEach((key, idx) => {
             if(key.indexOf('_assistData') === 0){
-                globalRefresh = true
+                assistKeys.push(key)
+            }else {
+                modelKeys.push(key)
             }
-            const refresh = idx === len - 1
-            Fn(key, delayCache[key], refresh, refresh && globalRefresh)
+        })
+        const assistLen = assistKeys.length
+        const modelLen = modelKeys.length
+        assistKeys.forEach((key, idx) => {
+            Fn(key, delayCache[key], false, idx === assistLen - 1)
+        })
+        modelKeys.forEach((key, idx) => {
+            const newFormData = Fn(key, delayCache[key], idx === modelLen - 1, false)
+            if(idx === modelLen - 1 && callback && callback instanceof Function){
+                callback(cloneData(newFormData))
+            }
         })
     }
     lastTime = Date.now()
     delayCache = {}
 }
-export const delayExecFn = (key, value, Fn) => {
+export const delayExecFn = (key, value, Fn, callback) => {
     const now = Date.now()
+    let callbackFn = callback
     if(JSON.stringify(delayCache) === '{}'){
         lastTime = now
     }
@@ -141,18 +135,19 @@ export const delayExecFn = (key, value, Fn) => {
         keys.forEach(keyItem => {
             delayCache[keyItem] = key[keyItem]
         })
+        callbackFn = value
     }else if(typeof key === 'string'){
         delayCache[key] = value
     }else {
         return
     }
     if(now - lastTime >= interTime){
-        clearCache(Fn)
+        clearCache(Fn, callbackFn)
     }else{
         setTimeout(() => {
             const now = Date.now()
             if(now - lastTime >= interTime){
-                clearCache(Fn)
+                clearCache(Fn, callbackFn)
             }
         }, interTime)
     }

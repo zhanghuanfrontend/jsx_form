@@ -1,6 +1,4 @@
 export {
-    getKeyValue,
-    modifyKeyValue,
     cloneData,
     isValueEqual,
     getAndSetKeyValue,

@@ -1,6 +1,6 @@
 {
   "name": "react_jsx_form",
-  "version": "2.1.4",
+  "version": "2.1.8",
   "description": "",
   "main": "dist/index.min.js",
   "scripts": {

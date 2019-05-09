@@ -1,13 +1,12 @@
 import React from 'react'
 import { 
     JSXFormData, 
-    modifyKeyValue, 
-    getKeyValue,
     JSXFormGlobalData,
     cloneData,
     getAndSetKeyValue,
     outputFormData,
     delayExecFn,
+    isValueEqual,
 } from './utils'
 import Schema from 'async-validator'
 const validator = new Schema({})
@@ -24,9 +23,10 @@ export default class JSXForm extends React.Component {
             formData: cloneData(props.value) || {},
             setFormData: this.delayExecFn,
             eleList: {},
+            validFnList: {},
             validResults: {},
             validator,
-            // localUpdate: props.localUpdate,
+            localUpdate: props.localUpdate,
             labelWidth: props.labelWidth
         }
         this.state = {
@@ -35,14 +35,21 @@ export default class JSXForm extends React.Component {
                 data: cloneData(this.JSXFormData.formData),
                 setValue: this.setValue,
                 getValue: this.getValue,
+                initForm: this.initForm,
+                validForm: this.validForm,
             }
         }
         // 注册监听的函数
         this.watchFn = {}
+        this.initData = null
     }
     componentWillReceiveProps(nextProps){
-        if(nextProps.value && nextProps.value !== this.props.value){
-            this.spreadDataChange(nextProps.value)
+        const { value } = nextProps
+        if(value 
+            && value !== this.props.value
+            && !isValueEqual(value, this.props.value)
+        ){
+            this.spreadDataChange(value)
         }
         const updateKeys = Object.keys(nextProps)
         updateKeys.forEach(key => {
@@ -53,12 +60,13 @@ export default class JSXForm extends React.Component {
     }
     // 广播数据的修改
     spreadDataChange = (value = {}) => {
-        const {eleList = {}} = this.JSXFormData
-        this.JSXFormData.formData = value
+        const {eleList = {}, formData} = this.JSXFormData
+        const updateData = cloneData(value)
+        this.JSXFormData.formData = Object.assign(formData, value)
         // 对所有已注册的key广播修改
         const keys = Object.keys(eleList)
         keys.forEach(key => {
-            const newValue = getKeyValue(value, key)
+            const newValue = getAndSetKeyValue(this.JSXFormData.formData, key)
             const modifyFns = eleList[key] || []
             modifyFns.forEach(Fn => {
                 if(Fn && Fn instanceof Function){
@@ -68,15 +76,16 @@ export default class JSXForm extends React.Component {
         })
     }
     // 延时执行更新
-    delayExecFn = (key, value) => {
-        delayExecFn(key, value, this.updateFormData)
+    delayExecFn = (key, value, callback) => {
+        delayExecFn(key, value, this.updateFormData, callback)
     }
     // 修改表单的值
     updateFormData = (key, value, refresh = false, globalRefresh = false) => {
         const { formData = {}, eleList = {}, validResults = {} } = this.JSXFormData
+        this.initData = this.initData || cloneData(formData)
         const { onChange, watch = {} } = this.props
         const prev = getAndSetKeyValue(formData, key)
-        modifyKeyValue(formData, key, value)
+        getAndSetKeyValue(formData, key, value)
         const modifyFns = eleList[key] || []
         modifyFns.forEach(Fn => {
             if(Fn && Fn instanceof Function){
@@ -107,22 +116,55 @@ export default class JSXForm extends React.Component {
         if(globalRefresh){
             this.setState({info: {...this.state.info}})
         }
+        return formData
+    }
+    // 校验FormItem
+    validFormItem = (key) => {
+        const { validFnList } = this.JSXFormData
+        if(key && typeof key === 'string') {
+            const FnList = validFnList[key] || []
+            FnList.forEach(Fn => {
+                if(Fn && Fn instanceof Function){
+                    Fn()
+                }
+            })
+        }
+    }
+    // 主动发起校验
+    validForm = (key) => {
+        const { validFnList, validResults } = this.JSXFormData
+        if(key && typeof key === 'string') {
+            this.validFormItem(key)
+        }else{
+            const keys = Object.keys(validFnList)
+            keys.forEach(key => {
+                this.validFormItem(key)
+            })
+        }
+        return JSON.stringify(validResults) === '{}'
+    }
+    // 重新初始化表单
+    initForm = () => {
+        this.setValue(this.initData, () => {
+            this.initData = null
+        })
     }
     // 获取指定key的值
     getValue = (key) => {
-        const { formData = {} } = this.JSXFormData
+        const { formData = {}, validResults = {}} = this.JSXFormData
         if(!key){
-            return outputFormData(formData)
+            const validRes = JSON.stringify(validResults) === '{}'
+            return validRes ? outputFormData(formData) : false
         }
-        return getKeyValue(formData, key)
+        return getAndSetKeyValue(formData, key)
     }
     // 设置指定key的值
-    setValue = (key, value) => {
+    setValue = (key, value, callback) => {
         if(!key){
             console.err('请传入正确的key')
             return
         }
-        this.delayExecFn(key, value)
+        this.delayExecFn(key, value, callback)
     }
     // 监听指定key的值
     watch = (key, callback) => {

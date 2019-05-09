@@ -1,13 +1,11 @@
 import React from 'react'
 import { 
     JSXFormData, 
-    getKeyValue, 
     getRules, 
     cloneData, 
     isValueEqual,
     getAndSetKeyValue
 } from './utils'
-import { instanceOf } from 'prop-types';
 
 export default class FormItem extends React.Component {
     constructor(props){
@@ -45,6 +43,14 @@ export default class FormItem extends React.Component {
         }
         if(!eleList[dataKey].includes(this.modifyValue)){
             eleList[dataKey].push(this.modifyValue)
+        }
+        // 注册校验函数
+        const validFnList = this.JSXFormData.validFnList
+        if(!validFnList[dataKey]){
+            validFnList[dataKey] = []
+        }
+        if(!validFnList[dataKey].includes(this.validFormItem)){
+            validFnList[dataKey].push(this.validFormItem)
         }
         // 初始化FormItem的值
         let curValue = initValue
