@@ -48,6 +48,6 @@ module.exports = (template, transform, babelOption) => {
     return template.replace(regJSXCon, (match, propStr) => {
         const reactCode = transform(match, babelOption).code.slice(0, -1)
         const parsedCode = parseReactElement(reactCode, option)
-        return `{${parsedCode}}`
+        return `<>{${parsedCode}}</>`
     })
 }

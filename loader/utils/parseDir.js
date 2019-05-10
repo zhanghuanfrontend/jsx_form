@@ -1,4 +1,10 @@
-const { vmodelParse, vforParse, vshowParse } = require('./directive/index.js')
+const { 
+    vmodelParse, 
+    vforParse, 
+    vshowParse, 
+    vhtmlParse, 
+    vtotalParse,
+} = require('./directive/index.js')
 const commonFn = require('./commonFn')
 
 const { getParamList, removeMarks } = commonFn
@@ -11,6 +17,10 @@ const parseDirective = (dir, curProp, newProp, option) => {
             return vforParse(curProp, newProp, option)
         case 'v-show':
             return vshowParse(curProp, newProp, option)
+        case 'v-html':
+            return vhtmlParse(curProp, newProp, option)
+        case 'v-total':
+            return vtotalParse(curProp, newProp, option)
     }
 }
 
@@ -52,7 +62,15 @@ const getPropStr = (props) => {
     const keys = Object.keys(props)
     keys.forEach(key => {
         if(key && props[key]){
-            propStr += `${key}: ${props[key]}, `
+            let propValue = ''
+            if(['boolean', 'number', 'string'].includes(typeof props[key])){
+                propValue = props[key]
+            }else if(Array.isArray(props[key])){
+                propValue = `[${props[key].join(',')}]`
+            }else if(props[key] instanceof Function){
+                propValue = props[key].toString()
+            }
+            propStr += `${key}: ${propValue}, `
         }
     })
     return `{${propStr}}`
