@@ -7,6 +7,7 @@ import {
     outputFormData,
     delayExecFn,
     isValueEqual,
+    boardUpdate,
 } from './utils'
 import Schema from 'async-validator'
 const validator = new Schema({})
@@ -86,12 +87,8 @@ export default class JSXForm extends React.Component {
         const { onChange, watch = {} } = this.props
         const prev = getAndSetKeyValue(formData, key)
         getAndSetKeyValue(formData, key, value)
-        const modifyFns = eleList[key] || []
-        modifyFns.forEach(Fn => {
-            if(Fn && Fn instanceof Function){
-                Fn(value)
-            }
-        })
+        // 广播key的更新
+        boardUpdate(eleList, key, formData)
         // 触发监听
         const watchFn = watch[key]
         if(watchFn && watchFn instanceof Function){

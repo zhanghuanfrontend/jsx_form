@@ -4,6 +4,7 @@ export {
     getAndSetKeyValue,
     outputFormData,
     delayExecFn,
+    boardUpdate,
 } from './commonFn'
 
 export {

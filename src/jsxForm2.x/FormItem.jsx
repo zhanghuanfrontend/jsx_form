@@ -21,6 +21,16 @@ export default class FormItem extends React.Component {
         const { localUpdate = true } = this.JSXFormData
         return !localUpdate || this.isReRender
     }
+    componentWillUnmount(){
+        const { dataKey } = this.props
+        if(this.JSXFormData){
+            const eleList = this.JSXFormData.eleList
+            // 注销掉更新函数
+            if(eleList[dataKey]){
+                delete eleList[dataKey]
+            }
+        }
+    }
     // 修改value
     modifyValue = (value) => {
         if(!isValueEqual(this.state.value, value)){
@@ -55,7 +65,8 @@ export default class FormItem extends React.Component {
         // 初始化FormItem的值
         let curValue = initValue
         if(children instanceof Function){
-            curValue = curValue || ['']
+            const initData = getAndSetKeyValue(context.formData, dataKey)
+            curValue = curValue || initData || ['']
         }
         const value = getAndSetKeyValue(context.formData, dataKey, curValue)
         this.setState({value: cloneData(value)})

@@ -13,7 +13,15 @@ export default class Base extends React.Component {
             formData: {
                 paramList: [
                     {
-                        name: '测试123',
+                        name: '测试1',
+                        os: '',
+                    },
+                    {
+                        name: '测试2',
+                        os: '',
+                    },
+                    {
+                        name: '测试3',
                         os: '',
                     },
                 ]
@@ -29,8 +37,14 @@ export default class Base extends React.Component {
                 labelWidth={60}
                 onChange={(valid, data) => {}}>
                 <div v-for="(item, index) in paramList">
-                    <Input v-model="item.name" v-label={`名称${index}`} />
-                    <Select v-model="item.os" style={{width: '100%'}} allowClear v-label="操作系统">
+                    <Input v-total={['item.name', `名称${index}`]} />
+                    <Select v-model="item.os" onChange={value => {
+                        const curParam = {
+                            name: 123,
+                            os: value
+                        }
+                        _self.setValue(`paramList.${index}`, curParam)
+                    }} style={{width: '100%'}} allowClear v-label="操作系统">
                         <Option v-for="osItem in {osList}" key={osItem} value={osItem}>{osItem}</Option>
                     </Select>
                     <div className="add-btn" 
@@ -49,6 +63,7 @@ export default class Base extends React.Component {
                         onClick={() => {
                             const list = _self.getValue('paramList')
                             list.splice(index, 1)
+                            console.log(list)
                             _self.setValue('paramList', list)
                         }
                     }>

@@ -5,8 +5,40 @@
 // </JSXForm>
 // `
 
-export const codeExample = `<JSXForm>
-<Input name={['test']} v-total={['os', '操作系统']}/>
+export const codeExample = `<JSXForm 
+value={{
+    paramList: [
+        {name: '1'},
+        {name: '2'},
+        {name: '3'},
+    ]
+}} 
+labelWidth={60}
+onChange={(valid, data) => {}}>
+<div v-for="(item, index) in paramList">
+    <Input v-model="item.name" v-label="名称" />
+    <div className="add-btn" 
+        v-show={index === _self.getValue('paramList').length - 1} 
+        onClick={() => {
+            const list = _self.getValue('paramList')
+            list.push({
+                name: '测试123',
+                os: '234'
+            })
+            _self.setValue('paramList', list)
+        }
+    }>+</div>
+    <div className="delete-btn" 
+        v-show={index !== 0}
+        onClick={() => {
+            const list = _self.getValue('paramList')
+            list.splice(index, 1)
+            _self.setValue('paramList', list)
+        }
+    }>
+        <Icon theme="filled" type="delete" />
+    </div>
+</div>
 </JSXForm>`
 
 

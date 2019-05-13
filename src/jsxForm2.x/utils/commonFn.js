@@ -73,7 +73,7 @@ export const getAndSetKeyValue = (data, keyStr, value) => {
     for(let i = 0; i < len; i++) {
         const key = keyList[i]
         if(i === len -1){
-            finalData[key] = value || finalData[key]
+            finalData[key] = typeof value === 'undefined' ? finalData[key] : value
             return finalData[key]
         }else if(finalData[key] instanceof Object) {
             finalData = finalData[key]
@@ -151,4 +151,30 @@ export const delayExecFn = (key, value, Fn, callback) => {
             }
         }, interTime)
     }
+}
+
+// 触发对应key的更新函数
+const execUpdateFn = (eleList, key, formData) => {
+    const value = getAndSetKeyValue(formData, key)
+    const modifyFns = eleList[key] || []
+    modifyFns.forEach(Fn => {
+        if(Fn && Fn instanceof Function){
+            Fn(value)
+        }
+    })
+}
+
+// 广播key的修改
+export const boardUpdate = (eleList, key, formData) => {
+    // 更新当前key对应表单值
+    execUpdateFn(eleList, key, formData)
+    // 再更新子元素
+    setTimeout(() => {
+        const keys = Object.keys(eleList)
+        const updateKeys = keys.filter(curKey => curKey.indexOf(key) === 0 && curKey !== key)
+        updateKeys.forEach(curKey => {
+            execUpdateFn(eleList, curKey, formData)
+        })
+    })
+    
 }
