@@ -13,13 +13,6 @@ module.exports = {
         new BundleAnalyzerPlugin(),
     ],
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                sourceMap: true,
-                parallel: true,
-            }),
-        ]
     },
     mode: 'production'
 }

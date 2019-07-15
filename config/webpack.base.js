@@ -3,51 +3,21 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const devMode = process.env.NODE_ENV !== 'production'
 const path = require('path')
-const JSXFormLoader = require('../dist/loader.js')
-const TestFormLoader = path.resolve(__dirname, '../loader/index.js')
-
-const webpackPlugins = []
-let externals = {}
-if(devMode){
-    webpackPlugins.push(new HtmlWebpackPlugin({
-        template: paths.rootHtml,
-        filename: 'index.html',
-        inject: true,
-        minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            collapseInlineTagWhitespace: true,
-        }
-    }))
-    externals = {
-        echarts: 'echarts'
-    }
-}else{
-    externals = {
-        'react': {
-            commonjs: 'react',
-            commonjs2: 'react',
-            root: 'react',
-            amd: 'react'
-        }
-    }
-}
-const fileName = devMode ? 'static/js/[name].[id].[hash].js' : 'index.min.js'
-const entry = devMode ? paths.testEntry : paths.buildEntry
 
 module.exports = {
-    entry,
+    entry: {
+        index: paths.resolve('../src/index.js'),
+        background: paths.resolve('../src/js/background.js')
+    },
     output: {
-        filename: fileName,
+        filename: 'js/[name].min.js',
         path: paths.output,
-        library: 'jsx-form',
-        libraryTarget: 'umd'
     },
     module: {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                include: [paths.testPath, paths.srcPath],
+                include: paths.srcPath,
                 use: [
                     {
                         loader: 'babel-loader',
@@ -56,7 +26,7 @@ module.exports = {
                             presets: [
                                 ['@babel/preset-env', {
                                     targets: {
-                                        browsers: ['ie >= 8']
+                                        chrome: 62
                                     }
                                 }], 
                                 '@babel/preset-react'
@@ -68,9 +38,6 @@ module.exports = {
                             ]
                         }
                     },
-                    {
-                        loader: TestFormLoader
-                    }
                 ]
             },
             {
@@ -96,11 +63,22 @@ module.exports = {
             },
         ]
     },
-    plugins: webpackPlugins,
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: paths.rootHtml,
+            filename: 'index.html',
+            inject: true,
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                collapseInlineTagWhitespace: true,
+            }
+        })
+    ],
     resolve: {
         alias: paths.alias,
         extensions: ['.js', '.jsx', '.css', '.less', '.json'],
         modules: [paths.module],
     },
-    externals,
+    externals: {}
 }

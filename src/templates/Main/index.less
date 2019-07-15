@@ -1,0 +1,87 @@
+html,body {
+    height: auto !important;
+}
+.verify-area {
+    width: 280px;
+    color: #666;
+    // border: solid 1px #ddd;
+    // margin: 50px;
+    .title {
+        height: 40px;
+        line-height: 35px;
+        text-align: center;
+        color: #333;
+        font-size: 14px;
+        border-bottom: solid 1px #ddd;
+    }
+    .form-item {
+        display: flex;
+        align-items: center;
+        border-bottom: solid 1px #ddd;
+        padding: 10px;
+        .label {
+            font-size: 12px;
+            width: 50px;
+            align-items: center;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+        }
+        .ant-select {
+            margin-left: 10px;
+            flex: 1 1 auto;
+            overflow: auto;
+            font-size: 12px;
+        }
+    }
+    .container {
+        margin: 15px 10px;
+        .hint-info {
+            margin: 10px 0;
+            font-size: 13px;
+            text-align: justify;
+        }
+        .ant-table-wrapper {
+            .ant-table {
+                font-size: 12px;
+                border-radius: 0;
+                .ant-table-body {
+                    margin: 0;
+                    th,td {
+                        padding: 4px;
+                    }
+                    .long-th-area {
+                        max-width: 100px;
+                        word-break: break-all;
+                    }
+                }
+                .ant-table-placeholder {
+                    font-size: 13px;
+                    padding: 13px;
+                }
+            }
+        }
+        .footer {
+            font-size: 12px;
+            color: #999;
+            padding-top: 10px;
+            p {
+                margin-bottom: 5px;
+                a {
+                    float: right;
+                }
+            }
+            ol {
+                padding-left: 30px;
+                text-align: justify;
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+.ant-select-dropdown {
+    font-size: 12px !important;
+    .ant-select-dropdown-menu {
+        max-height: 196px !important;
+    }
+}

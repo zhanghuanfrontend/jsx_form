@@ -5,7 +5,8 @@ module.exports = {
         module: [
             'react', 
             'react-dom',
-            'antd'
+            'antd',
+            'axios'
         ],
     },
     output: {

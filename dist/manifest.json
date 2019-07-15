@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "et_verify",
+    "version": "1.0.8",
+    "description": "劫持发送埋点的请求，转发到ET，用于埋点验证",
+    "browser_action": {
+        "default_icon": "static/icon.png",
+        "default_title": "埋点自动验证",
+        "default_popup": "index.html"
+    },
+    "background": {
+        "scripts": ["js/background.min.js"]
+    },
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "<all_urls>",
+        "tabs",
+        "storage"
+    ]
+}

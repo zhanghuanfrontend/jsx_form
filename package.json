@@ -1,7 +1,10 @@
 {
   "name": "react_jsx_form",
-  "version": "2.2.5",
+  "version": "2.2.9",
   "description": "",
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.min.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.dev.js --color",
@@ -57,11 +60,8 @@
   },
   "dependencies": {
     "antd": "^3.16.2",
-    "async-validator": "^1.11.0",
-    "codemirror": "^5.46.0",
+    "axios": "^0.18.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-element-to-jsx-string": "^14.0.2",
-    "react-syntax-highlighter": "^10.2.1"
+    "react-dom": "^16.8.6"
   }
 }
